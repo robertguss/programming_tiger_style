@@ -26,8 +26,8 @@ Put this way, style is more than readability, and readability is table stakes, a
 rather than an end in itself.
 
 > “...in programming, style is not something to pursue directly. Style is necessary only where
-> understanding is missing.” ─ [Let Over
-> Lambda](https://letoverlambda.com/index.cl/guest/chap1.html)
+> understanding is missing.” ─
+> [Let Over Lambda](https://letoverlambda.com/index.cl/guest/chap1.html)
 
 This document explores how we apply these design goals to coding style. First, a word on simplicity,
 elegance and technical debt.
@@ -45,8 +45,8 @@ solves the axes simultaneously, to achieve something elegant.
 
 Contrary to popular belief, simplicity is also not the first attempt but the hardest revision. It's
 easy to say “let's do something simple”, but to do that in practice takes thought, multiple passes,
-many sketches, and still we may have to [“throw one
-away”](https://en.wikipedia.org/wiki/The_Mythical_Man-Month).
+many sketches, and still we may have to
+[“throw one away”](https://en.wikipedia.org/wiki/The_Mythical_Man-Month).
 
 The hardest part, then, is how much thought goes into everything.
 
@@ -84,14 +84,14 @@ made is indeed progress.
 > but after a while their use becomes second-nature and not using them becomes unimaginable.” —
 > Gerard J. Holzmann
 
-[NASA's Power of Ten — Rules for Developing Safety Critical
-Code](https://spinroot.com/gerard/pdf/P10.pdf) will change the way you code forever. To expand:
+[NASA's Power of Ten — Rules for Developing Safety Critical Code](https://spinroot.com/gerard/pdf/P10.pdf)
+will change the way you code forever. To expand:
 
 - Use **only very simple, explicit control flow** for clarity. **Do not use recursion** to ensure
   that all executions that should be bounded are bounded. Use **only a minimum of excellent
-  abstractions** but only if they make the best sense of the domain. Abstractions are [never zero
-  cost](https://isaacfreund.com/blog/2022-05/). Every abstraction introduces the risk of a leaky
-  abstraction.
+  abstractions** but only if they make the best sense of the domain. Abstractions are
+  [never zero cost](https://isaacfreund.com/blog/2022-05/). Every abstraction introduces the risk of
+  a leaky abstraction.
 
 - **Put a limit on everything** because, in reality, this is what we expect—everything has a limit.
   For example, all loops and all queues must have a fixed upper bound to prevent infinite loops or
@@ -105,7 +105,6 @@ Code](https://spinroot.com/gerard/pdf/P10.pdf) will change the way you code fore
   be handled, assertion failures are unexpected. The only correct way to handle corrupt code is to
   crash. Assertions downgrade catastrophic correctness bugs into liveness bugs. Assertions are a
   force multiplier for discovering bugs by fuzzing.**
-
   - **Assert all function arguments and return values, pre/postconditions and invariants.** A
     function must not operate blindly on data it has not checked. The purpose of a function is to
     increase the probability that a program is correct. Assertions within a function are part of how
@@ -120,16 +119,16 @@ Code](https://spinroot.com/gerard/pdf/P10.pdf) will change the way you code fore
   - On occasion, you may use a blatantly true assertion instead of a comment as stronger
     documentation where the assertion condition is critical and surprising.
 
-  - Split compound assertions: prefer `assert(a); assert(b);` over `assert(a and b);`.
-    The former is simpler to read, and provides more precise information if the condition fails.
+  - Split compound assertions: prefer `assert(a); assert(b);` over `assert(a and b);`. The former is
+    simpler to read, and provides more precise information if the condition fails.
 
   - Use single-line `if` to assert an implication: `if (a) assert(b)`.
 
   - **Assert the relationships of compile-time constants** as a sanity check, and also to document
-    and enforce [subtle
-    invariants](https://github.com/coilhq/tigerbeetle/blob/db789acfb93584e5cb9f331f9d6092ef90b53ea6/src/vsr/journal.zig#L45-L47)
-    or [type
-    sizes](https://github.com/coilhq/tigerbeetle/blob/578ac603326e1d3d33532701cb9285d5d2532fe7/src/ewah.zig#L41-L53).
+    and enforce
+    [subtle invariants](https://github.com/coilhq/tigerbeetle/blob/db789acfb93584e5cb9f331f9d6092ef90b53ea6/src/vsr/journal.zig#L45-L47)
+    or
+    [type sizes](https://github.com/coilhq/tigerbeetle/blob/578ac603326e1d3d33532701cb9285d5d2532fe7/src/ewah.zig#L41-L53).
     Compile-time assertions are extremely powerful because they are able to check a program's design
     integrity _before_ the program even executes.
 
@@ -158,19 +157,18 @@ Code](https://spinroot.com/gerard/pdf/P10.pdf) will change the way you code fore
 - Declare variables at the **smallest possible scope**, and **minimize the number of variables in
   scope**, to reduce the probability that variables are misused.
 
-- There's a sharp discontinuity between a function fitting on a screen, and having to scroll to
-  see how long it is. For this physical reason we enforce a **hard limit of 70 lines per function**.
-  Art is born of constraints. There are many ways to cut a wall of code into chunks of 70 lines,
-  but only a few splits will feel right. Some rules of thumb:
-
-  * Good function shape is often the inverse of an hourglass: a few parameters, a simple return
+- There's a sharp discontinuity between a function fitting on a screen, and having to scroll to see
+  how long it is. For this physical reason we enforce a **hard limit of 70 lines per function**. Art
+  is born of constraints. There are many ways to cut a wall of code into chunks of 70 lines, but
+  only a few splits will feel right. Some rules of thumb:
+  - Good function shape is often the inverse of an hourglass: a few parameters, a simple return
     type, and a lot of meaty logic between the braces.
-  * Centralize control flow. When splitting a large function, try to keep all switch/if
-    statements in the "parent" function, and move non-branchy logic fragments to helper
-    functions. Divide responsibility. All control flow should be handled by _one_ function, the rest shouldn't
-    care about control flow at all. In other words,
+  - Centralize control flow. When splitting a large function, try to keep all switch/if statements
+    in the "parent" function, and move non-branchy logic fragments to helper functions. Divide
+    responsibility. All control flow should be handled by _one_ function, the rest shouldn't care
+    about control flow at all. In other words,
     ["push `if`s up and `for`s down"](https://matklad.github.io/2023/11/15/push-ifs-up-and-fors-down.html).
-  * Similarly, centralize state manipulation. Let the parent function keep all relevant state in
+  - Similarly, centralize state manipulation. Let the parent function keep all relevant state in
     local variables, and use helpers to compute what needs to change, rather than applying the
     change directly. Keep leaf functions pure.
 
@@ -210,10 +208,10 @@ Beyond these rules:
   }
   ```
 
-- All errors must be handled. An [analysis of production failures in distributed data-intensive
-  systems](https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf) found that
-  the majority of catastrophic failures could have been prevented by simple testing of error
-  handling code.
+- All errors must be handled. An
+  [analysis of production failures in distributed data-intensive systems](https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-yuan.pdf)
+  found that the majority of catastrophic failures could have been prevented by simple testing of
+  error handling code.
 
 > “Specifically, we found that almost all (92%) of the catastrophic system failures are the result
 > of incorrect handling of non-fatal errors explicitly signaled in software.”
@@ -259,7 +257,8 @@ Beyond these rules:
 - Be explicit. Minimize dependence on the compiler to do the right thing for you.
 
   In particular, extract hot loops into stand-alone functions with primitive arguments without
-  `self` (see [an example](https://github.com/tigerbeetle/tigerbeetle/blob/0.16.19/src/lsm/compaction.zig#L1932-L1937)).
+  `self` (see
+  [an example](https://github.com/tigerbeetle/tigerbeetle/blob/0.16.19/src/lsm/compaction.zig#L1932-L1937)).
   That way, the compiler doesn't need to prove that it can cache struct's fields in registers, and a
   human reader can spot redundant computations easier.
 
@@ -294,9 +293,9 @@ Beyond these rules:
   then line up nicely when `latency_ms_min` is added, as well as group all variables that relate to
   latency.
 
-- Infuse names with meaning. For example, `allocator: Allocator` is a good, if boring name,
-  but `gpa: Allocator` and `arena: Allocator` are excellent. They inform the reader whether
-  `deinit` should be called explicitly.
+- Infuse names with meaning. For example, `allocator: Allocator` is a good, if boring name, but
+  `gpa: Allocator` and `arena: Allocator` are excellent. They inform the reader whether `deinit`
+  should be called explicitly.
 
 - When choosing related names, try hard to find names with the same number of characters so that
   related variables all line up in the source. For example, as arguments to a memcpy function,
@@ -346,9 +345,9 @@ Beyond these rules:
   conversation, whereas the latter must be clarified. Noun names compose more clearly for derived
   identifiers, e.g. `config.pipeline_max`.
 
-- Zig has named arguments through the `options: struct` pattern. Use it when arguments can be
-  mixed up. A function taking two `u64` must use an options struct. If an argument can be `null`,
-  it should be named so that the meaning of `null` literal at the call site is clear.
+- Zig has named arguments through the `options: struct` pattern. Use it when arguments can be mixed
+  up. A function taking two `u64` must use an options struct. If an argument can be `null`, it
+  should be named so that the meaning of `null` literal at the call site is clear.
 
   Because dependencies like an allocator or a tracer are singletons with unique types, they should
   be threaded through constructors positionally, from the most general to the most specific.
@@ -382,10 +381,11 @@ Beyond these rules:
   In-place initializations can assume **pointer stability** and **immovable types** while
   eliminating intermediate copy-move allocations, which can lead to undesirable stack growth.
 
-  Keep in mind that in-place initializations are viral — if any field is initialized
-  in-place, the entire container struct should be initialized in-place as well.
+  Keep in mind that in-place initializations are viral — if any field is initialized in-place, the
+  entire container struct should be initialized in-place as well.
 
   **Prefer:**
+
   ```zig
   fn init(target: *LargeStruct) !void {
     target.* = .{
@@ -400,6 +400,7 @@ Beyond these rules:
   ```
 
   **Over:**
+
   ```zig
   fn init() !LargeStruct {
     return LargeStruct {
@@ -464,8 +465,8 @@ Beyond these rules:
   your editor help you by setting a column ruler. To wrap a function signature, call or data
   structure, add a trailing comma, close your eyes and let `zig fmt` do the rest.
 
-  Similar to function length, the motivation behind the number 100 is physical: just enough
-  to fit two copies of the code side-by-side on a screen.
+  Similar to function length, the motivation behind the number 100 is physical: just enough to fit
+  two copies of the code side-by-side on a screen.
 
 - Add braces to the `if` statement unless it fits on a single line for consistency and defense in
   depth against "goto fail;" bugs.

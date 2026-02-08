@@ -18,9 +18,12 @@
 ## Alternatives Considered
 
 1. Alternative A
+
 - Pros:
 - Cons:
+
 2. Alternative B
+
 - Pros:
 - Cons:
 

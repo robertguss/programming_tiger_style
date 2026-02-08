@@ -16,11 +16,14 @@ Contract System v2 has four layers:
 
 1. Core contracts (cross-language): `contracts/core/`
 2. Language contracts:
+
 - `contracts/languages/RUST_CODING_CONTRACT.md`
 - `contracts/languages/TYPESCRIPT_CODING_CONTRACT.md`
 - `contracts/languages/PYTHON_CODING_CONTRACT.md`
+
 3. Delivery templates: `templates/`
 4. Validation and governance:
+
 - `checklists/`
 - `scripts/`
 - `.github/workflows/contract-gates.yml`

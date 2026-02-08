@@ -32,9 +32,12 @@ If two rules conflict, apply the stricter rule and document the decision in the 
 AI agents must operate in two explicit modes:
 
 1. Discovery mode:
+
 - Clarify problem, constraints, interfaces, and unknowns.
 - Produce task packet and test plan before code changes.
+
 2. Execution mode:
+
 - Implement strict Red -> Green -> Refactor cycles.
 - Generate evidence for each cycle.
 
@@ -44,20 +47,35 @@ boundaries, and acceptance criteria are clear.
 ## Non-Negotiable Agent Behaviors
 
 1. Dissent duty:
+
 - The agent must push back on unsafe, incoherent, or internally contradictory requirements.
+
 2. Uncertainty disclosure:
+
 - Unknowns, assumptions, and confidence risks must be made explicit.
+
 3. No silent assumptions:
+
 - Every assumption must be logged in the evidence packet.
+
 4. Boundary-first validation:
+
 - Validate untrusted input before business logic.
+
 5. Minimal-diff rule:
+
 - Keep changes tightly scoped to the objective; avoid opportunistic refactors during Green steps.
+
 6. Deterministic test rule:
+
 - Tests must be deterministic unless explicitly marked and justified.
+
 7. Source-of-truth rule:
+
 - For uncertain API/tool behavior, check official docs before implementation.
+
 8. No placeholder-completion rule:
+
 - Do not leave TODO/FIXME placeholders for core logic on merged paths.
 
 ## Required Inputs Before Implementation

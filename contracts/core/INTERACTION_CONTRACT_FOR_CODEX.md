@@ -32,9 +32,12 @@ Minimum required fields:
 ## Depth Modes
 
 1. Quick mode:
+
 - Use for low-risk, low-ambiguity tasks.
 - Favor speed with strict guardrails.
+
 2. Deep mode:
+
 - Use for architecture, Tier 2/Tier 3 changes, or ambiguous requirements.
 - Require full task packet, test plan, and evidence packet.
 

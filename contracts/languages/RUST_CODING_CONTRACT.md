@@ -2,8 +2,8 @@
 
 ## Purpose
 
-This contract defines how humans and AI agents write Rust in this repository.
-Priority order is fixed:
+This contract defines how humans and AI agents write Rust in this repository. Priority order is
+fixed:
 
 1. Safety
 2. Performance
@@ -30,9 +30,11 @@ This contract applies to:
 - TDD is mandatory for any code change.
 - Production code must not be added or changed before a failing test exists.
 - The cycle is strict and ordered:
+
 1. Red: add or modify a test that fails for the expected reason.
 2. Green: implement the minimum code required to make the test pass.
 3. Refactor: improve code structure while keeping behavior unchanged and tests green.
+
 - For bug fixes, a regression test must fail before the fix and pass after the fix.
 - Skipping Red or combining Red/Green into a single unverified step is non-compliant.
 
@@ -49,7 +51,8 @@ This contract applies to:
 
 - Bound queue sizes, retries, batch sizes, and per-request work.
 - Bound memory growth. Pre-size collections when limits are known.
-- For hard real-time or latency-critical paths, avoid post-init allocation and pre-allocate capacity.
+- For hard real-time or latency-critical paths, avoid post-init allocation and pre-allocate
+  capacity.
 - Fail fast when limits are exceeded, and return a typed error.
 - Timeouts are required for external I/O and cross-process boundaries.
 
@@ -119,11 +122,13 @@ This contract applies to:
 - Prefer `snake_case` for functions, variables, modules, and files.
 - Prefer domain nouns/verbs over abbreviations.
 - For booleans that affect behavior, prefer enums over boolean flags.
-- For async code, never block executors (`std::thread::sleep`, blocking I/O) and use bounded channels/concurrency.
+- For async code, never block executors (`std::thread::sleep`, blocking I/O) and use bounded
+  channels/concurrency.
 
 ## AI Agent Workflow
 
-Before writing code, the agent must produce a short design sketch in the PR description or issue comment:
+Before writing code, the agent must produce a short design sketch in the PR description or issue
+comment:
 
 1. Invariants and failure modes.
 2. Bounds (time, memory, retries, queue depth, batch size).
@@ -174,7 +179,8 @@ cargo +nightly miri test
 
 TDD evidence gate:
 
-- PR must include a Red -> Green -> Refactor trace (commit order or PR log) with test command evidence.
+- PR must include a Red -> Green -> Refactor trace (commit order or PR log) with test command
+  evidence.
 
 ## Pull Request Contract Checklist
 

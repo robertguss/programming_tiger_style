@@ -15,18 +15,18 @@ This policy defines risk tiers and required controls for each change.
 
 ## Required Controls By Tier
 
-| Control | Tier 0 | Tier 1 | Tier 2 | Tier 3 |
-| --- | --- | --- | --- | --- |
-| Red -> Green -> Refactor evidence | Required | Required | Required | Required |
-| Task packet | Optional | Required | Required | Required |
-| Test plan | Optional | Required | Required | Required |
-| Evidence packet | Required | Required | Required | Required |
-| Adversarial review checklist | Optional | Recommended | Required | Required |
-| Security review | Optional | Recommended | Required | Required |
-| Performance budget check | Optional | Recommended | Required | Required |
-| Rollback plan | Optional | Required | Required | Required |
-| Reviewer count | 1 | 1 | 2 | 2+ |
-| Explicit exception approval | Required if used | Required if used | Required if used | Required if used |
+| Control                           | Tier 0           | Tier 1           | Tier 2           | Tier 3           |
+| --------------------------------- | ---------------- | ---------------- | ---------------- | ---------------- |
+| Red -> Green -> Refactor evidence | Required         | Required         | Required         | Required         |
+| Task packet                       | Optional         | Required         | Required         | Required         |
+| Test plan                         | Optional         | Required         | Required         | Required         |
+| Evidence packet                   | Required         | Required         | Required         | Required         |
+| Adversarial review checklist      | Optional         | Recommended      | Required         | Required         |
+| Security review                   | Optional         | Recommended      | Required         | Required         |
+| Performance budget check          | Optional         | Recommended      | Required         | Required         |
+| Rollback plan                     | Optional         | Required         | Required         | Required         |
+| Reviewer count                    | 1                | 1                | 2                | 2+               |
+| Explicit exception approval       | Required if used | Required if used | Required if used | Required if used |
 
 ## Assignment Rules
 

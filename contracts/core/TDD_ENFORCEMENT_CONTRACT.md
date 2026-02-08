@@ -83,8 +83,8 @@ Use `templates/EVIDENCE_PACKET_TEMPLATE.md`.
 
 ## Exceptions (Emergency Use Only)
 
-TDD exceptions are strongly discouraged and allowed only for urgent incident mitigation where
-delay would create greater risk.
+TDD exceptions are strongly discouraged and allowed only for urgent incident mitigation where delay
+would create greater risk.
 
 An exception request must include:
 

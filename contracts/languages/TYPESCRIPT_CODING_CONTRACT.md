@@ -2,8 +2,8 @@
 
 ## Purpose
 
-This contract defines how humans and AI agents write TypeScript in this repository.
-Priority order is fixed:
+This contract defines how humans and AI agents write TypeScript in this repository. Priority order
+is fixed:
 
 1. Safety
 2. Performance
@@ -30,9 +30,11 @@ This contract applies to:
 - TDD is mandatory for any code change.
 - Production code must not be added or changed before a failing test exists.
 - The cycle is strict and ordered:
+
 1. Red: add or modify a test that fails for the expected reason.
 2. Green: implement the minimum code required to make the test pass.
 3. Refactor: improve code structure while keeping behavior unchanged and tests green.
+
 - For bug fixes, a regression test must fail before the fix and pass after the fix.
 - Skipping Red or combining Red/Green into a single unverified step is non-compliant.
 
@@ -169,7 +171,8 @@ npm run test:fuzz
 
 TDD evidence gate:
 
-- PR must include a Red -> Green -> Refactor trace (commit order or PR log) with test command evidence.
+- PR must include a Red -> Green -> Refactor trace (commit order or PR log) with test command
+  evidence.
 
 ## Pull Request Contract Checklist
 

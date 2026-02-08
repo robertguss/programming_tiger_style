@@ -14,8 +14,7 @@ This contract defines review standards for correctness, safety, and maintainabil
 
 1. Author self-review using `checklists/PR_CONTRACT_CHECKLIST.md`.
 2. Primary reviewer pass for correctness and contract compliance.
-3. Adversarial reviewer pass for Tier 2/Tier 3 using
-   `checklists/ADVERSARIAL_REVIEW_CHECKLIST.md`.
+3. Adversarial reviewer pass for Tier 2/Tier 3 using `checklists/ADVERSARIAL_REVIEW_CHECKLIST.md`.
 
 ## Required Reviewer Checks
 

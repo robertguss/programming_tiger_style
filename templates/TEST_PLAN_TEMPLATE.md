@@ -16,15 +16,15 @@
 
 ## Red Tests (Must Fail First)
 
-| Test ID | Type | Scenario | Expected Failure |
-| --- | --- | --- | --- |
-| RED-1 | unit/integration | | |
+| Test ID | Type             | Scenario | Expected Failure |
+| ------- | ---------------- | -------- | ---------------- |
+| RED-1   | unit/integration |          |                  |
 
 ## Green Validation Tests
 
-| Test ID | Type | Scenario | Expected Pass Condition |
-| --- | --- | --- | --- |
-| GREEN-1 | unit/integration | | |
+| Test ID | Type             | Scenario | Expected Pass Condition |
+| ------- | ---------------- | -------- | ----------------------- |
+| GREEN-1 | unit/integration |          |                         |
 
 ## Refactor Safety Net
 
@@ -34,8 +34,8 @@
 ## Boundary And Negative Tests
 
 | Test ID | Boundary/Abuse Case | Expected Behavior |
-| --- | --- | --- |
-| NEG-1 | | |
+| ------- | ------------------- | ----------------- |
+| NEG-1   |                     |                   |
 
 ## Performance Tests
 

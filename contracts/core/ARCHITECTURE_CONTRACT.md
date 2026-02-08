@@ -7,13 +7,20 @@ This contract defines architecture standards that keep systems testable, safe, a
 ## Architectural Principles
 
 1. Functional core, imperative shell:
+
 - Keep domain logic pure where practical.
 - Isolate I/O, side effects, and framework glue at boundaries.
+
 2. Explicit boundaries:
+
 - Clearly separate domain, infrastructure, and interface layers.
+
 3. Dependency direction:
+
 - Dependencies must point inward toward stable domain logic.
+
 4. Small composable units:
+
 - Favor cohesive modules over broad utility dumping grounds.
 
 ## Required Patterns

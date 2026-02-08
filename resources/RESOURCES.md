@@ -9,9 +9,9 @@ Curated references to support this contract system.
 
 ## TDD And Testing
 
-1. *Test-Driven Development: By Example* (Kent Beck)
-2. *Growing Object-Oriented Software, Guided by Tests* (Freeman & Pryce)
-3. *xUnit Test Patterns* (Meszaros)
+1. _Test-Driven Development: By Example_ (Kent Beck)
+2. _Growing Object-Oriented Software, Guided by Tests_ (Freeman & Pryce)
+3. _xUnit Test Patterns_ (Meszaros)
 4. Property-based testing references (language-specific ecosystem docs)
 5. Mutation testing references (language-specific ecosystem docs)
 
