@@ -1,0 +1,150 @@
+# CI and Validation
+
+This project enforces contract compliance through local scripts and a GitHub workflow gate.
+
+## Local Validators
+
+### `scripts/validate_tdd_cycle.sh`
+
+What it checks:
+
+- Commit subject prefixes are allowed (`RED`, `GREEN`, `REFACTOR`, `DOCS`, `CHORE`, `BUILD`, `TEST`).
+- Commit order contains Red -> Green -> Refactor for non-doc changes.
+- Invalid sequencing fails the run.
+
+Typical usage:
+
+```bash
+bash scripts/validate_tdd_cycle.sh --base origin/main
+```
+
+Safe smoke check:
+
+```bash
+bash scripts/validate_tdd_cycle.sh --base HEAD
+```
+
+### `scripts/validate_evidence_packet.sh`
+
+What it checks:
+
+- Required headings exist in evidence packet or PR body.
+- Placeholder markers are not present.
+
+Typical usage with PR body markdown file:
+
+```bash
+bash scripts/validate_evidence_packet.sh --pr-body /tmp/pr_body.md
+```
+
+Typical usage with repository evidence file:
+
+```bash
+bash scripts/validate_evidence_packet.sh --file .evidence/EVIDENCE_PACKET.md
+```
+
+## GitHub Actions Gate
+
+Workflow: `.github/workflows/contract-gates.yml`
+
+On pull requests and pushes to `main`, it performs:
+
+1. Checkout with full history.
+2. Shell syntax checks for validator scripts.
+3. TDD sequence validation using a computed base SHA.
+4. PR body evidence heading validation (`pull_request` events).
+5. Repository evidence file validation when `.evidence/EVIDENCE_PACKET.md` exists (`push` events).
+
+## PR Body Evidence Requirements
+
+PR content must include these headings:
+
+- `## Objective`
+- `## Risk Tier`
+- `## Scope`
+- `## Red`
+- `## Green`
+- `## Refactor`
+- `## Invariants`
+- `## Security Impact`
+- `## Performance Impact`
+- `## Assumptions`
+- `## Open Questions`
+- `## Rollback Plan`
+- `## Validation Commands`
+
+The provided `.github/pull_request_template.md` already matches this structure.
+
+## Common Failure Signatures and Fixes
+
+### Failure: invalid commit prefix
+
+Example:
+
+```text
+Invalid commit prefix in <sha>: '<subject>'
+Allowed prefixes: RED, GREEN, REFACTOR, DOCS, CHORE, BUILD, TEST
+```
+
+Fix:
+
+- Rewrite commit subjects in the validated range with allowed prefixes.
+- Keep ordering consistent with Red -> Green -> Refactor for non-doc changes.
+
+### Failure: green before red
+
+Example:
+
+```text
+Invalid sequence: GREEN before RED in commit <sha>
+```
+
+Fix:
+
+- Split work into proper sequence.
+- Ensure failing test commit exists before implementation commit.
+
+### Failure: missing evidence headings
+
+Example:
+
+```text
+Missing required heading: ## Security Impact
+Evidence packet validation failed.
+```
+
+Fix:
+
+- Add all required headings exactly as expected.
+- Keep headings in Markdown level-2 format.
+
+### Failure: unresolved placeholders
+
+Example:
+
+```text
+Evidence packet contains unresolved placeholders.
+```
+
+Fix:
+
+- Replace all placeholders with concrete values before merge.
+
+## Running CI-Equivalent Checks Locally
+
+```bash
+bash -n scripts/validate_tdd_cycle.sh
+bash -n scripts/validate_evidence_packet.sh
+bash scripts/validate_tdd_cycle.sh --base origin/main
+bash scripts/validate_evidence_packet.sh --pr-body .github/pull_request_template.md
+```
+
+## Non-GitHub CI Note
+
+If your project does not use GitHub Actions, keep the same two validator scripts and run them in your
+CI provider with equivalent merge-blocking semantics.
+
+## Related References
+
+- [Contract Reference Map](./contract-reference-map.md)
+- [FAQ](./faq.md)

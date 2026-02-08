@@ -5,6 +5,19 @@ Standards-first repository for high-rigor coding with humans and AI agents.
 This project translates TigerBeetle style and NASA/JPL Power of Ten ideas into an executable
 Contract System v2 for AI-assisted software development.
 
+## Documentation
+
+Start here:
+
+- [Quickstart](./docs/quickstart.md)
+- [Using with Coding Agents](./docs/using-with-coding-agents.md)
+- [Adopting in a New Project](./docs/adopting-in-a-new-project.md)
+- [Contract Reference Map](./docs/contract-reference-map.md)
+
+Full docs hub:
+
+- [Documentation Index](./docs/README.md)
+
 ## Source Foundations
 
 1. `resources/TIGER_STYLE.md`
@@ -16,14 +29,11 @@ Contract System v2 has four layers:
 
 1. Core contracts (cross-language): `contracts/core/`
 2. Language contracts:
-
 - `contracts/languages/RUST_CODING_CONTRACT.md`
 - `contracts/languages/TYPESCRIPT_CODING_CONTRACT.md`
 - `contracts/languages/PYTHON_CODING_CONTRACT.md`
-
 3. Delivery templates: `templates/`
 4. Validation and governance:
-
 - `checklists/`
 - `scripts/`
 - `.github/workflows/contract-gates.yml`

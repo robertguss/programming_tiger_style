@@ -1,0 +1,78 @@
+# Language Contracts
+
+Contract System v2 ships three language contracts. They are first-class and equal: choose based on
+actual code scope, not team preference.
+
+## Available Contracts
+
+- `contracts/languages/RUST_CODING_CONTRACT.md`
+- `contracts/languages/PYTHON_CODING_CONTRACT.md`
+- `contracts/languages/TYPESCRIPT_CODING_CONTRACT.md`
+
+All three enforce strict TDD and include language-specific rules for error handling, type safety,
+performance boundaries, and warning-free CI.
+
+## Precedence and Composition
+
+Rules compose in this order:
+
+1. Core contracts always apply.
+2. One or more language contracts apply for files in scope.
+3. If rules conflict, apply the stricter rule and document rationale in evidence.
+
+For polyglot repositories, apply each language contract to its language surface while keeping one
+shared risk tier and shared evidence packet.
+
+## Selection Logic
+
+### Single-language repository
+
+Choose the contract matching the implementation language and enforce it for production and test
+files.
+
+### Polyglot repository
+
+Apply multiple language contracts concurrently. Example: a Rust service plus TypeScript frontend
+must satisfy core contracts plus Rust and TypeScript language rules.
+
+### Scripting/tooling inside a main language repo
+
+If scripts are in Python or TypeScript, they still fall under the respective language contract unless
+explicitly exempted by documented exception.
+
+## Same Feature, Different Language Constraints (Concrete Example)
+
+Feature slice: "Reject invalid pagination limit and return typed error."
+
+Rust path:
+
+- Add failing test for invalid limit.
+- Return typed error (`Result<_, DomainError>`), avoid `panic!/unwrap/expect` in production path.
+- Use fixed-width numeric types at boundaries.
+
+Python path:
+
+- Add failing test for invalid limit.
+- Raise explicit typed/domain exception, avoid broad `except:` handlers.
+- Validate untrusted input before business logic.
+
+TypeScript path:
+
+- Add failing test for invalid limit.
+- Validate external input as `unknown`, narrow to typed structure.
+- Avoid `any`; return explicit typed error or discriminated union.
+
+All three paths must preserve strict Red -> Green -> Refactor evidence and full-suite refactor gate.
+
+## Cross-Language Consistency Checklist
+
+- Shared feature semantics remain equivalent across languages.
+- Error behavior is explicit and test-covered in each language.
+- Performance and security constraints are asserted in each implementation.
+- Evidence packet references all language-specific test commands used.
+
+## Related References
+
+- [Risk Tiers and Controls](./risk-tiers-and-controls.md)
+- [Using with Coding Agents](./using-with-coding-agents.md)
+- [Glossary](./glossary.md)
