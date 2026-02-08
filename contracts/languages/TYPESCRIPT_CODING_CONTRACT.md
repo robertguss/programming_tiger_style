@@ -1,8 +1,8 @@
-# Python Coding Contract
+# TypeScript Coding Contract
 
 ## Purpose
 
-This contract defines how humans and AI agents write Python in this repository.
+This contract defines how humans and AI agents write TypeScript in this repository.
 Priority order is fixed:
 
 1. Safety
@@ -11,11 +11,17 @@ Priority order is fixed:
 
 If a tradeoff is required, choose the higher priority item.
 
+## Contract Integration
+
+- This language contract supplements the core contracts in `contracts/core/`.
+- Core contracts are mandatory for all work, including TypeScript/JavaScript.
+- If rules conflict, apply the stricter rule and document rationale in evidence.
+
 ## Scope
 
 This contract applies to:
 
-- All production Python code.
+- All production TypeScript and JavaScript code.
 - All tests, scripts, and tooling code unless explicitly exempted.
 - All AI-generated or AI-edited code.
 
@@ -37,64 +43,64 @@ This contract applies to:
 - Do not use recursion unless explicitly approved in a design note.
 - Every loop must have a clear upper bound, or a clear reason it is intentionally non-terminating.
 - Prefer explicit branches over dense compound conditions.
-- Split complex branching so positive and negative cases are both handled explicitly.
+- Split complex branching into positive and negative cases that are both handled explicitly.
 
 ### 2) Put explicit limits on work and resources
 
 - Bound retries, queue depth, batch size, and per-request work.
-- Bound payload sizes and memory growth of in-process collections.
-- Require explicit timeouts for external I/O (HTTP, DB, queues, file/network operations).
-- Use bounded pools/executors for concurrency.
+- Bound payload sizes and in-memory collection growth.
+- Require explicit timeouts for I/O (HTTP, database, queues, files).
+- Use cancellation (`AbortSignal`) for long-running async operations.
 
 ### 3) Treat assertions and invariants as design checks
 
 - Assert preconditions, postconditions, and critical invariants.
-- Pair assertions across boundaries (for example, before write and after read).
+- Pair assertions across boundaries (for example, before persistence and after retrieval).
 - Prefer multiple simple assertions over one dense assertion.
-- Use `assert` for programmer invariants; use explicit exceptions for runtime validation.
+- Keep assertions side-effect free.
 
 ### 4) Handle all errors explicitly
 
-- No bare `except:` blocks.
-- Catch specific exception types and preserve context.
-- Do not silently swallow exceptions.
-- Library code must raise typed/domain exceptions instead of exiting the process.
+- Every rejected promise must be handled or deliberately propagated.
+- No floating promises in production code.
+- `catch` blocks must preserve context and return typed failures where possible.
+- `throw` raw strings is forbidden.
 
 ### 5) Keep state tight and single-sourced
 
 - Keep variable scope as small as possible.
-- Avoid duplicated state that can diverge.
+- Avoid duplicated state that can drift out of sync.
 - Compute values close to use sites to reduce stale checks.
-- Avoid mutable global state unless explicitly justified.
+- Prefer immutable data (`const`, `readonly`) by default.
 
 ### 6) Keep functions small and cohesive
 
-- Hard limit: 70 lines per function (excluding decorators and docstring).
+- Hard limit: 70 lines per function (excluding signature and decorators).
 - Each function should have one clear responsibility.
-- Keep branch orchestration in parent functions and move pure computation to helpers.
+- Keep control flow orchestration in parent functions and move pure computation to helpers.
 
-### 7) Use explicit types and units
+### 7) Use explicit types at boundaries
 
-- Type hints are required for public functions, methods, and module-level constants.
-- Validate untrusted input at boundaries before use.
-- Encode units in names (`timeout_s`, `size_bytes`, `latency_ms`).
-- Avoid implicit type coercion in critical paths.
+- `strict` mode is required in `tsconfig`.
+- `any` is forbidden in production code. Use `unknown` at external boundaries and narrow it.
+- Validate untrusted input at runtime before use (HTTP, env, file, queue, DB).
+- Prefer discriminated unions over boolean flag combinations for state transitions.
 
 ### 8) Avoid dangerous dynamic behavior
 
-- `eval` and `exec` are forbidden in production code.
-- Dynamic imports that depend on untrusted input are forbidden.
-- Mutable default arguments are forbidden.
+- `eval`, `new Function`, and implicit code execution from strings are forbidden.
+- Prototype mutation in application code is forbidden.
+- Global mutable singleton state requires explicit justification.
 
 ### 9) Be explicit at call sites
 
 - Do not rely on implicit defaults for correctness- or safety-critical behavior.
-- Prefer keyword arguments over ambiguous positional argument lists.
-- Important return values must be consumed; do not ignore failures.
+- Prefer options objects with named fields over ambiguous positional argument lists.
+- Important return values must be consumed and should be modeled to prevent accidental ignoring.
 
 ### 10) Zero-warning policy
 
-- The codebase must lint, typecheck, and test with zero warnings.
+- The codebase must build, typecheck, and lint with zero warnings.
 - New warnings block merge.
 
 ### 11) Mandatory TDD cycle (Red -> Green -> Refactor)
@@ -103,14 +109,14 @@ This contract applies to:
 - Each cycle should be small and focused on one behavior at a time.
 - Refactors that change behavior require a new Red step first.
 
-## Python-Specific Style and API Rules
+## TypeScript-Specific Style and API Rules
 
 - Formatting is mandatory with a single formatter configuration.
 - Line length limit is 100 columns.
-- Prefer `snake_case` for files, variables, and functions.
-- Use context managers for resource lifetimes (`with` for files, locks, connections).
-- Async code must never block the event loop with synchronous I/O or sleep calls.
-- For CPU-intensive tasks, use process pools or offload outside the async loop.
+- Prefer `snake_case` for file names and `camelCase` for variables/functions.
+- Public interfaces and exported functions require explicit return types.
+- Async code must not block the event loop with CPU-heavy sync work on hot paths.
+- For CPU-intensive tasks, offload to worker threads or separate services.
 
 ## AI Agent Workflow
 
@@ -119,7 +125,7 @@ comment:
 
 1. Invariants and failure modes.
 2. Bounds (timeouts, retries, queue depth, payload limits, batch size).
-3. Error model (exceptions and propagation strategy).
+3. Error model (typed errors and propagation strategy).
 4. TDD plan naming the first failing test and expected failure mode.
 5. Test plan (valid, invalid, boundary, and regression cases).
 
@@ -143,23 +149,22 @@ Before merge, the agent must:
 Minimum required commands:
 
 ```bash
-ruff format --check .
-ruff check . --output-format=full
-mypy .
-pytest -q
+npx tsc --noEmit
+npx eslint . --max-warnings 0
+npx prettier --check .
+npm test
 ```
 
-Required for services with concurrency/performance-critical paths:
+Required for services with performance-critical paths:
 
 ```bash
-pytest -q -m "not slow" --maxfail=1
+npm run test:perf
 ```
 
 Optional but recommended where available:
 
 ```bash
-pyright
-pytest -q --hypothesis-show-statistics
+npm run test:fuzz
 ```
 
 TDD evidence gate:
@@ -176,11 +181,11 @@ Each PR must answer yes/no to the following:
 4. Are all loops/retries bounded or intentionally non-terminating with justification?
 5. Are limits explicit (timeouts, retries, queue sizes, payload and memory growth)?
 6. Are preconditions/postconditions/invariants checked where critical?
-7. Are exceptions explicit and specific, with no swallowed failures?
+7. Are all promises and errors handled without floating rejections?
 8. Are function sizes and scopes kept within contract limits?
-9. Are boundary types and units explicit, with input validation?
-10. Are dangerous dynamic behaviors (`eval`, `exec`) absent?
-11. Did lint/typecheck/tests pass with zero warnings?
+9. Are boundary types explicit, with runtime validation for untrusted input?
+10. Are dangerous dynamic behaviors (`eval`, runtime code strings) absent?
+11. Did typecheck/lint/tests pass with zero warnings?
 12. Does the PR explain why the design is safe and performant, not only what changed?
 
 ## Exception Process

@@ -1,0 +1,65 @@
+name: contract-gates
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  contract-gates:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout pull request head
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout push branch
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Ensure scripts are executable
+        run: chmod +x scripts/*.sh
+
+      - name: Lint shell scripts
+        run: |
+          bash -n scripts/validate_tdd_cycle.sh
+          bash -n scripts/validate_evidence_packet.sh
+
+      - name: Validate TDD commit sequence
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            BASE_SHA="$(jq -r '.before // ""' "$GITHUB_EVENT_PATH")"
+            if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+              BASE_SHA="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+            fi
+          else
+            BASE_SHA="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+          fi
+
+          if ! git rev-parse --verify --quiet "${BASE_SHA}^{commit}" >/dev/null; then
+            BASE_SHA="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+          fi
+
+          scripts/validate_tdd_cycle.sh --base "$BASE_SHA"
+
+      - name: Validate evidence packet in PR body
+        if: github.event_name == 'pull_request'
+        run: |
+          jq -r '.pull_request.body // ""' "$GITHUB_EVENT_PATH" > /tmp/pr_body.md
+          scripts/validate_evidence_packet.sh --pr-body /tmp/pr_body.md
+
+      - name: Validate repository evidence packet on push (optional)
+        if: github.event_name == 'push' && hashFiles('.evidence/EVIDENCE_PACKET.md') != ''
+        run: scripts/validate_evidence_packet.sh --file .evidence/EVIDENCE_PACKET.md

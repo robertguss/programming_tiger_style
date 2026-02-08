@@ -11,6 +11,12 @@ Priority order is fixed:
 
 If a tradeoff is required, choose the higher priority item.
 
+## Contract Integration
+
+- This language contract supplements the core contracts in `contracts/core/`.
+- Core contracts are mandatory for all work, including Rust.
+- If rules conflict, apply the stricter rule and document rationale in evidence.
+
 ## Scope
 
 This contract applies to:
