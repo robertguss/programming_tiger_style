@@ -13,7 +13,7 @@ like in practice.
 ## 1) Clone and Enter the Repository (macOS/Linux)
 
 ```bash
-git clone https://github.com/<your-org>/programming_tiger_style.git
+git clone https://github.com/robertguss/programming_tiger_style.git
 cd programming_tiger_style
 ```
 
@@ -27,7 +27,7 @@ git pull
 Windows (PowerShell) equivalent:
 
 ```powershell
-git clone https://github.com/<your-org>/programming_tiger_style.git
+git clone https://github.com/robertguss/programming_tiger_style.git
 Set-Location programming_tiger_style
 ```
 
