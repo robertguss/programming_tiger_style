@@ -86,6 +86,14 @@ SEEN_GREEN=0
 SEEN_REFACTOR=0
 
 for commit in "${COMMITS[@]}"; do
+  # Ignore merge commits (for example, GitHub synthetic PR merge commits) because
+  # they are integration artifacts, not authored TDD lifecycle commits.
+  parent_line="$(git rev-list --parents -n 1 "$commit")"
+  parent_count=$(( $(wc -w <<<"$parent_line") - 1 ))
+  if [[ "$parent_count" -gt 1 ]]; then
+    continue
+  fi
+
   subject="$(git log -1 --format=%s "$commit")"
   prefix="${subject%%:*}"
 

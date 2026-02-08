@@ -14,7 +14,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout pull request head
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout push branch
+        if: github.event_name != 'pull_request'
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
