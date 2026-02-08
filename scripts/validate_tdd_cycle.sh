@@ -66,7 +66,7 @@ if [[ "$STRICT_DOC_ONLY" -eq 0 ]]; then
   DOC_ONLY=1
   while IFS= read -r path; do
     case "$path" in
-      *.md|*.txt|*.rst|LICENSE|README.md|.github/*|contracts/*|templates/*|checklists/*|.evidence/*)
+      *.txt|*.rst|LICENSE|README.md|.github/*|contracts/*|templates/*|checklists/*|.evidence/*|*.md)
         ;;
       *)
         DOC_ONLY=0
