@@ -20,8 +20,9 @@ This contract applies to every code change, regardless of language.
 When multiple contracts apply, use this precedence:
 
 1. `contracts/core/*.md` (this directory)
-2. language contracts (`RUST_CODING_CONTRACT.md`, `TYPESCRIPT_CODING_CONTRACT.md`,
-   `PYTHON_CODING_CONTRACT.md`)
+2. language contracts (`contracts/languages/RUST_CODING_CONTRACT.md`,
+   `contracts/languages/TYPESCRIPT_CODING_CONTRACT.md`,
+   `contracts/languages/PYTHON_CODING_CONTRACT.md`)
 3. task-specific instructions in the active issue/PR
 
 If two rules conflict, apply the stricter rule and document the decision in the evidence packet.

@@ -4,8 +4,8 @@ Curated references to support this contract system.
 
 ## Foundations
 
-1. `TIGER_STYLE.md`
-2. `P10.pdf` (NASA/JPL Power of Ten)
+1. `resources/TIGER_STYLE.md`
+2. `resources/P10.pdf` (NASA/JPL Power of Ten)
 
 ## TDD And Testing
 

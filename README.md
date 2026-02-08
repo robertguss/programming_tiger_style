@@ -7,8 +7,8 @@ Contract System v2 for AI-assisted software development.
 
 ## Source Foundations
 
-1. `TIGER_STYLE.md`
-2. `P10.pdf`
+1. `resources/TIGER_STYLE.md`
+2. `resources/P10.pdf`
 
 ## Contract System v2
 
@@ -16,9 +16,9 @@ Contract System v2 has four layers:
 
 1. Core contracts (cross-language): `contracts/core/`
 2. Language contracts:
-- `RUST_CODING_CONTRACT.md`
-- `TYPESCRIPT_CODING_CONTRACT.md`
-- `PYTHON_CODING_CONTRACT.md`
+- `contracts/languages/RUST_CODING_CONTRACT.md`
+- `contracts/languages/TYPESCRIPT_CODING_CONTRACT.md`
+- `contracts/languages/PYTHON_CODING_CONTRACT.md`
 3. Delivery templates: `templates/`
 4. Validation and governance:
 - `checklists/`
@@ -74,7 +74,7 @@ No Red -> Green -> Refactor evidence means no merge.
 
 ### References
 
-- `RESOURCES.md`
+- `resources/RESOURCES.md`
 
 ## Operating Workflow
 
