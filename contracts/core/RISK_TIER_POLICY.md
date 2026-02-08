@@ -20,7 +20,7 @@ This policy defines risk tiers and required controls for each change.
 | Red -> Green -> Refactor evidence | Required | Required | Required | Required |
 | Task packet | Optional | Required | Required | Required |
 | Test plan | Optional | Required | Required | Required |
-| Evidence packet | Optional | Required | Required | Required |
+| Evidence packet | Required | Required | Required | Required |
 | Adversarial review checklist | Optional | Recommended | Required | Required |
 | Security review | Optional | Recommended | Required | Required |
 | Performance budget check | Optional | Recommended | Required | Required |

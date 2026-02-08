@@ -39,15 +39,20 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE_SHA="$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")"
-            scripts/validate_tdd_cycle.sh --base "$BASE_SHA"
-          else
-            if git rev-parse --verify --quiet HEAD~1 >/dev/null; then
-              BASE_SHA="HEAD~1"
-            else
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            BASE_SHA="$(jq -r '.before // ""' "$GITHUB_EVENT_PATH")"
+            if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
               BASE_SHA="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
             fi
-            scripts/validate_tdd_cycle.sh --base "$BASE_SHA"
+          else
+            BASE_SHA="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
           fi
+
+          if ! git rev-parse --verify --quiet "${BASE_SHA}^{commit}" >/dev/null; then
+            BASE_SHA="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+          fi
+
+          scripts/validate_tdd_cycle.sh --base "$BASE_SHA"
 
       - name: Validate evidence packet in PR body
         if: github.event_name == 'pull_request'

@@ -81,6 +81,21 @@ Use `templates/EVIDENCE_PACKET_TEMPLATE.md`.
 2. PR evidence enforcement script: `scripts/validate_evidence_packet.sh`.
 3. Manual reviewer verification using `checklists/PR_CONTRACT_CHECKLIST.md`.
 
-## Exceptions
+## Exceptions (Emergency Use Only)
 
-No TDD exception is allowed without explicit approval and documented risk controls.
+TDD exceptions are strongly discouraged and allowed only for urgent incident mitigation where
+delay would create greater risk.
+
+An exception request must include:
+
+1. Why strict Red -> Green -> Refactor cannot be executed first.
+2. Immediate risk controls applied.
+3. Timeboxed follow-up plan to restore full TDD coverage.
+4. Expiration condition for the exception.
+
+Explicit approval means both of the following:
+
+1. One code owner approval.
+2. One technical lead or maintainer approval.
+
+The exception details and approvals must be recorded in the evidence packet and PR discussion.

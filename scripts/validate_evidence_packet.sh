@@ -56,6 +56,10 @@ if [[ -z "$INPUT_PATH" || ! -f "$INPUT_PATH" ]]; then
   exit 2
 fi
 
+NORMALIZED_PATH="$(mktemp)"
+trap 'rm -f "$NORMALIZED_PATH"' EXIT
+tr -d '\r' < "$INPUT_PATH" > "$NORMALIZED_PATH"
+
 REQUIRED_HEADINGS=()
 while IFS= read -r heading; do
   REQUIRED_HEADINGS+=("$heading")
@@ -77,7 +81,7 @@ EOF_HEADINGS
 
 missing=0
 for heading in "${REQUIRED_HEADINGS[@]}"; do
-  if ! grep -qxF "$heading" "$INPUT_PATH"; then
+  if ! grep -qxF "$heading" "$NORMALIZED_PATH"; then
     echo "Missing required heading: $heading" >&2
     missing=1
   fi
@@ -88,7 +92,7 @@ if [[ "$missing" -ne 0 ]]; then
   exit 1
 fi
 
-if grep -Eqi '<fill|tbd|todo|replace me>' "$INPUT_PATH"; then
+if grep -Eqi '<fill|tbd|todo|replace me>' "$NORMALIZED_PATH"; then
   echo "Evidence packet contains unresolved placeholders (e.g., TBD/TODO/<fill>)." >&2
   exit 1
 fi
