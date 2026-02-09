@@ -35,10 +35,15 @@
 - Minimal implementation summary:
   - Slice 1 (`install`): embedded install assets, implemented file copy/create/overwrite paths,
     dry-run behavior, unix script permission setting, and conflict detection with diff previews.
+  - Slice 2 (`configure`): implemented manifest mode handling (`autodetect`, `all-active`,
+    `all-inactive`), language detection with directory exclusions, canonical manifest rendering, and
+    AGENTS template creation/conflict handling.
 - Command(s) used:
   - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- install_`
+  - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- configure_`
 - Passing summary:
   - Install integration tests passed (`4 passed; 0 failed`).
+  - Configure integration tests passed (`3 passed; 0 failed`).
 
 ## Refactor
 
