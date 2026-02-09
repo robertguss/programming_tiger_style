@@ -31,6 +31,7 @@
 - [ ] Security impact is assessed and documented.
 - [ ] No secret leakage in code/logging.
 - [ ] Auth/authz and sensitive paths include negative tests (Tier 2/Tier 3).
+- [ ] Tier 2/Tier 3 changes include a linked threat-model artifact and residual risk owner.
 
 ## Performance
 

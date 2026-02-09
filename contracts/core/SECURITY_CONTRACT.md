@@ -6,7 +6,7 @@ This contract enforces secure-by-default development and review practices.
 
 ## Baseline Requirements
 
-1. Threat model required for Tier 2/Tier 3 changes.
+1. Threat model artifact required for Tier 2/Tier 3 changes and linked in PR evidence.
 2. Validate and sanitize untrusted inputs at boundaries.
 3. Enforce least privilege for credentials and access controls.
 4. Never hard-code secrets.
@@ -53,6 +53,19 @@ Security impact must be documented in the evidence packet:
 1. Threats considered.
 2. Mitigations applied.
 3. Residual risks.
+4. Tier 2/Tier 3 threat-model artifact reference (path/link) and last update point.
+
+## Threat Model Artifact Minimum
+
+For Tier 2/Tier 3 changes, provide a threat-model artifact that includes:
+
+1. Assets and trust boundaries in scope.
+2. Primary abuse paths and attacker capabilities considered.
+3. Mitigations and compensating controls mapped to abuse paths.
+4. Residual risk acceptance owner.
+
+Artifact location may be repository markdown, ADR, or linked document, but it must be accessible
+from PR evidence.
 
 ## Incident Readiness
 

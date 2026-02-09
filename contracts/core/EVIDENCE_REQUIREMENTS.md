@@ -68,6 +68,14 @@ Must include:
 2. Why behavior is unchanged.
 3. Confirmation tests remain green.
 
+### Security Impact
+
+Must include:
+
+1. Threats considered and mitigations applied.
+2. Residual risk statement.
+3. For Tier 2/Tier 3: threat-model artifact reference (path/link) and freshness statement.
+
 ## Enforcement
 
 1. CI/local script: `scripts/validate_evidence_packet.sh`.

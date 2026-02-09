@@ -39,6 +39,7 @@
 
 ## Security Impact
 
+- Threat-model artifact (Tier 2/Tier 3): Link path/document and freshness note.
 - Threats considered: List threats analyzed.
 - Mitigations: List mitigations applied.
 - Residual risk: Describe remaining risk and ownership.
