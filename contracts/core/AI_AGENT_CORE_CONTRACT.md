@@ -54,7 +54,9 @@ AI agents must operate in two explicit modes:
 1. Discovery mode:
 
 - Clarify problem, constraints, interfaces, and unknowns.
-- Produce task packet and test plan before code changes.
+- For Tier 1-3 work, produce task packet and test plan before code changes.
+- For Tier 0 work, lightweight planning notes are acceptable unless repository policy requires full
+  artifacts.
 
 2. Execution mode:
 
@@ -100,7 +102,7 @@ boundaries, and acceptance criteria are clear.
 
 ## Required Inputs Before Implementation
 
-Each task must provide a task packet using `templates/TASK_PACKET_TEMPLATE.md` and include:
+Tier 1-3 tasks must provide a task packet using `templates/TASK_PACKET_TEMPLATE.md` and include:
 
 1. Objective and non-goals.
 2. Constraints and forbidden approaches.
@@ -109,9 +111,13 @@ Each task must provide a task packet using `templates/TASK_PACKET_TEMPLATE.md` a
 5. Security/performance requirements.
 6. Definition of done and rollback conditions.
 
+Tier 0 tasks may use lightweight planning notes or the full task packet. Repository policy may
+choose stricter behavior and require full Tier-0 planning artifacts.
+
 ## Required Outputs For Every Change
 
-1. Test plan from `templates/TEST_PLAN_TEMPLATE.md`.
+1. Test plan from `templates/TEST_PLAN_TEMPLATE.md` for Tier 1-3 (Tier 0 optional unless repo
+   policy requires it).
 2. Evidence packet from `templates/EVIDENCE_PACKET_TEMPLATE.md`.
 3. Completed PR checklist (`checklists/PR_CONTRACT_CHECKLIST.md`).
 4. Adversarial review pass (`checklists/ADVERSARIAL_REVIEW_CHECKLIST.md`) for Tier 2/Tier 3.

@@ -17,7 +17,9 @@ Minimum briefing fields:
 - Acceptance criteria
 - Risk tier and rationale
 
-If any of these are missing, stop and complete the packet before implementation.
+If any of these are missing for Tier 1-3 work, stop and complete the packet before
+implementation. Tier 0 may use lightweight planning notes unless repository policy requires full
+artifacts.
 
 ## Prompt Structure You Can Reuse
 
@@ -30,8 +32,8 @@ Acceptance criteria:
 Risk tier (0-3) and rationale:
 
 Create/update:
-- Task packet
-- Test plan
+- Task packet (required for Tier 1-3; Tier 0 optional unless repo policy requires)
+- Test plan (required for Tier 1-3; Tier 0 optional unless repo policy requires)
 - Evidence packet
 
 Enforce strict Red -> Green -> Refactor per feature slice.
@@ -42,8 +44,10 @@ Do not write production code before a failing test exists.
 
 Use this sequence for every meaningful change:
 
-1. Create a task packet from `templates/TASK_PACKET_TEMPLATE.md`.
-2. Create a test plan from `templates/TEST_PLAN_TEMPLATE.md`.
+1. For Tier 1-3, create a task packet from `templates/TASK_PACKET_TEMPLATE.md` (Tier 0 optional
+   unless repo policy requires it).
+2. For Tier 1-3, create a test plan from `templates/TEST_PLAN_TEMPLATE.md` (Tier 0 optional unless
+   repo policy requires it).
 3. Execute strict per-slice Red -> Green -> Refactor.
 4. Capture evidence in `templates/EVIDENCE_PACKET_TEMPLATE.md`.
 5. Complete `checklists/PR_CONTRACT_CHECKLIST.md`.

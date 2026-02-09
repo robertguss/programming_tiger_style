@@ -20,7 +20,8 @@ changes and should be decided before implementation.
    persistence invariants, payments, shared concurrency primitives, critical infra dependencies).
 4. Escalate to Tier 3 if failure could be safety-critical, irreversible, or platform-wide.
 5. If uncertain between two tiers, pick the higher tier.
-6. Record rationale in the task packet and evidence packet.
+6. Record rationale in the evidence packet, and in the task packet when a task packet is required
+   (Tier 1-3 by default, or Tier 0 when repo policy requires it).
 
 ## Required Controls by Tier (Operational View)
 
@@ -28,6 +29,8 @@ changes and should be decided before implementation.
 
 Use strict TDD/evidence discipline where code exists, but planning artifacts can be lighter. One
 reviewer is sufficient. Adversarial review is optional unless risk indicators appear.
+
+Repository owners may choose stricter Tier-0 policy and require task packet/test plan.
 
 ### Tier 1
 

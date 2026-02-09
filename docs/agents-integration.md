@@ -37,7 +37,8 @@ packet and, if needed, in an ADR.
 
 ## Recommended AGENTS.md Clauses
 
-- "Use task packet + test plan before implementation for Tier 1+."
+- "Use task packet + test plan before implementation for Tier 1+; Tier 0 is optional unless local
+  policy is stricter."
 - "No production code before failing test per feature slice."
 - "PRs must include evidence sections required by validator."
 - "Run validator scripts before opening PR."
@@ -50,7 +51,8 @@ When an agent session starts in a repository:
 1. Read `AGENTS.md`.
 2. Read relevant files in `contracts/core/` and selected language contract(s).
 3. Confirm risk tier for requested change.
-4. Create task packet and test plan.
+4. For Tier 1-3, create task packet and test plan (Tier 0 optional unless local policy is
+   stricter).
 5. Execute strict Red -> Green -> Refactor.
 6. Capture evidence and run validators.
 

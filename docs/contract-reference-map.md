@@ -18,7 +18,7 @@ The map below references these workflow steps:
 
 | File | What it is | When to use | Required for tier | Workflow step |
 | --- | --- | --- | --- | --- |
-| `contracts/core/AI_AGENT_CORE_CONTRACT.md` | Baseline agent behavior and required inputs/outputs | Any AI-assisted change | 0-3 | 1, 3, 4 |
+| `contracts/core/AI_AGENT_CORE_CONTRACT.md` | Baseline agent behavior and required inputs/outputs | Any AI-assisted change (Tier 1-3 planning artifacts required; Tier 0 optional unless stricter local policy) | 0-3 | 1, 3, 4 |
 | `contracts/core/TDD_ENFORCEMENT_CONTRACT.md` | Strict TDD cycle rules and commit taxonomy | Any executable code change | 0-3 | 2, 3, 6 |
 | `contracts/core/RISK_TIER_POLICY.md` | Tier definitions and required controls by risk | During task planning | 0-3 | 1, 5 |
 | `contracts/core/EVIDENCE_REQUIREMENTS.md` | Required evidence packet sections and quality bar | Before PR creation | 0-3 | 4, 6 |
@@ -76,3 +76,4 @@ When multiple files apply to the same change, use the stricter rule. In practice
 2. Matching language contracts apply in addition.
 3. Risk-tier controls can raise testing/review requirements.
 4. CI validators enforce required evidence and TDD sequence.
+5. Repository policy may require stricter Tier-0 planning artifacts than baseline policy.

@@ -91,9 +91,9 @@ No Red -> Green -> Refactor evidence means no merge.
 
 ## Operating Workflow
 
-1. Create a task packet.
+1. For Tier 1-3, create a task packet (Tier 0 optional unless repo policy is stricter).
 2. Assign risk tier.
-3. Create a test plan.
+3. For Tier 1-3, create a test plan (Tier 0 optional unless repo policy is stricter).
 4. Execute Red -> Green -> Refactor in small cycles.
 5. Produce evidence packet.
 6. Complete PR and adversarial checklists.
@@ -108,6 +108,9 @@ Before implementation, provide:
 3. Interfaces/files in scope.
 4. Acceptance criteria.
 5. Risk tier.
+
+For Tier 1-3 work, provide full task packet and test plan. For Tier 0 work, lightweight planning
+notes are acceptable unless repository policy requires full artifacts.
 
 Then require explicit evidence in PR output.
 
