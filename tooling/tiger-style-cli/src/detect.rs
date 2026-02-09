@@ -39,7 +39,7 @@ pub fn autodetect_languages(root: &Path) -> Result<LanguageStatus> {
         }
 
         if let Some(ext) = entry.path().extension().and_then(|value| value.to_str()) {
-            match ext {
+            match ext.to_ascii_lowercase().as_str() {
                 "rs" => status.rust = true,
                 "py" => status.python = true,
                 "ts" | "tsx" | "js" | "jsx" => status.typescript = true,

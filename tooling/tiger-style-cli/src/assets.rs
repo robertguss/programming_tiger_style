@@ -24,6 +24,10 @@ static AGENTS_TEMPLATE: &[u8] = include_bytes!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../docs/templates/AGENTS_TEMPLATE.md"
 ));
+static MANIFEST_TEMPLATE: &[u8] = include_bytes!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../contracts/ACTIVE_LANGUAGE_CONTRACTS.md"
+));
 
 pub fn install_assets() -> Vec<Asset> {
     let mut assets = Vec::new();
@@ -50,6 +54,10 @@ pub fn install_assets() -> Vec<Asset> {
 
 pub fn agents_template() -> &'static [u8] {
     AGENTS_TEMPLATE
+}
+
+pub fn manifest_template() -> &'static [u8] {
+    MANIFEST_TEMPLATE
 }
 
 fn collect_dir(prefix: &str, dir: &Dir<'_>, assets: &mut Vec<Asset>) {

@@ -14,6 +14,7 @@ pub fn run(args: &InstallArgs) -> Result<(), AppError> {
 
     let assets = assets::install_assets();
     let mut conflict_list = Vec::new();
+    let mut actions = Vec::new();
 
     for asset in assets {
         let destination = args.target.join(&asset.relative_path);
@@ -28,7 +29,9 @@ pub fn run(args: &InstallArgs) -> Result<(), AppError> {
 
         match existing {
             Some(current) if current == asset.contents => {
-                println!("SKIP (unchanged): {}", asset.relative_path);
+                actions.push(InstallAction::Skip {
+                    relative_path: asset.relative_path,
+                });
             }
             Some(current) if !args.force => {
                 conflict_list.push(conflicts::from_bytes(
@@ -38,22 +41,22 @@ pub fn run(args: &InstallArgs) -> Result<(), AppError> {
                 ));
             }
             Some(_) => {
-                write_asset(
-                    &destination,
-                    &asset.contents,
-                    asset.executable,
-                    args.dry_run,
-                )?;
-                log_action("OVERWRITE", &asset.relative_path, args.dry_run);
+                actions.push(InstallAction::Write {
+                    action: "OVERWRITE",
+                    destination,
+                    contents: asset.contents,
+                    executable: asset.executable,
+                    relative_path: asset.relative_path,
+                });
             }
             None => {
-                write_asset(
-                    &destination,
-                    &asset.contents,
-                    asset.executable,
-                    args.dry_run,
-                )?;
-                log_action("CREATE", &asset.relative_path, args.dry_run);
+                actions.push(InstallAction::Write {
+                    action: "CREATE",
+                    destination,
+                    contents: asset.contents,
+                    executable: asset.executable,
+                    relative_path: asset.relative_path,
+                });
             }
         }
     }
@@ -62,7 +65,38 @@ pub fn run(args: &InstallArgs) -> Result<(), AppError> {
         return Err(AppError::Conflict(ConflictError::new(conflict_list)));
     }
 
+    for action in actions {
+        match action {
+            InstallAction::Skip { relative_path } => {
+                println!("SKIP (unchanged): {relative_path}");
+            }
+            InstallAction::Write {
+                action,
+                destination,
+                contents,
+                executable,
+                relative_path,
+            } => {
+                write_asset(&destination, &contents, executable, args.dry_run)?;
+                log_action(action, &relative_path, args.dry_run);
+            }
+        }
+    }
+
     Ok(())
+}
+
+enum InstallAction {
+    Skip {
+        relative_path: String,
+    },
+    Write {
+        action: &'static str,
+        destination: std::path::PathBuf,
+        contents: Vec<u8>,
+        executable: bool,
+        relative_path: String,
+    },
 }
 
 fn write_asset(
