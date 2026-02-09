@@ -10,22 +10,79 @@ permissions:
   contents: read
 
 jobs:
-  contract-gates:
+  detect-active-languages:
+    runs-on: ubuntu-latest
+    outputs:
+      rust: ${{ steps.detect.outputs.rust }}
+      python: ${{ steps.detect.outputs.python }}
+      typescript: ${{ steps.detect.outputs.typescript }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Detect active language contracts
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          rust_active=false
+          python_active=false
+          typescript_active=false
+
+          manifest="contracts/ACTIVE_LANGUAGE_CONTRACTS.md"
+
+          parse_manifest_flag() {
+            local language="$1"
+            local line
+            line="$(grep -E "^- ${language}:[[:space:]]*(active|inactive)[[:space:]]*$" "$manifest" || true)"
+            if [[ -z "$line" ]]; then
+              echo "Manifest error: expected '- ${language}: active|inactive' in ${manifest}" >&2
+              exit 1
+            fi
+
+            if [[ "$line" =~ :[[:space:]]*active[[:space:]]*$ ]]; then
+              echo "true"
+            else
+              echo "false"
+            fi
+          }
+
+          if [[ -f "$manifest" ]]; then
+            rust_active="$(parse_manifest_flag rust)"
+            python_active="$(parse_manifest_flag python)"
+            typescript_active="$(parse_manifest_flag typescript)"
+          else
+            if git ls-files '*.rs' | grep -q .; then
+              rust_active=true
+            fi
+            if git ls-files '*.py' | grep -q .; then
+              python_active=true
+            fi
+            if git ls-files '*.ts' '*.tsx' '*.js' '*.jsx' | grep -q .; then
+              typescript_active=true
+            fi
+          fi
+
+          {
+            echo "rust=${rust_active}"
+            echo "python=${python_active}"
+            echo "typescript=${typescript_active}"
+          } >> "$GITHUB_OUTPUT"
+
+  contract-core-gates:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout pull request head
-        if: github.event_name == 'pull_request'
+      - name: Checkout repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Checkout push branch
-        if: github.event_name != 'pull_request'
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
       - name: Ensure scripts are executable
         run: chmod +x scripts/*.sh
@@ -36,7 +93,9 @@ jobs:
           bash -n scripts/validate_evidence_packet.sh
 
       - name: Validate TDD commit sequence
+        shell: bash
         run: |
+          set -euo pipefail
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE_SHA="$(jq -r '.pull_request.base.sha' "$GITHUB_EVENT_PATH")"
           elif [ "${{ github.event_name }}" = "push" ]; then
@@ -63,3 +122,84 @@ jobs:
       - name: Validate repository evidence packet on push (optional)
         if: github.event_name == 'push' && hashFiles('.evidence/EVIDENCE_PACKET.md') != ''
         run: scripts/validate_evidence_packet.sh --file .evidence/EVIDENCE_PACKET.md
+
+  rust-gates:
+    runs-on: ubuntu-latest
+    needs:
+      - detect-active-languages
+      - contract-core-gates
+    if: needs.detect-active-languages.outputs.rust == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Ensure Rust toolchain is available
+        run: command -v cargo >/dev/null || (echo "Rust is active but cargo is unavailable in this runner." >&2; exit 1)
+
+      - name: Run Rust contract gates
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --workspace --all-targets --all-features -- \
+            -D warnings \
+            -D clippy::unwrap_used \
+            -D clippy::expect_used \
+            -D clippy::undocumented_unsafe_blocks
+          cargo test --workspace --all-features
+
+  python-gates:
+    runs-on: ubuntu-latest
+    needs:
+      - detect-active-languages
+      - contract-core-gates
+    if: needs.detect-active-languages.outputs.python == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Ensure Python tooling is available
+        run: |
+          command -v ruff >/dev/null || (echo "Python is active but ruff is unavailable in this runner." >&2; exit 1)
+          command -v mypy >/dev/null || (echo "Python is active but mypy is unavailable in this runner." >&2; exit 1)
+          command -v pytest >/dev/null || (echo "Python is active but pytest is unavailable in this runner." >&2; exit 1)
+
+      - name: Run Python contract gates
+        run: |
+          ruff format --check .
+          ruff check . --output-format=full
+          mypy .
+          pytest -q
+
+  typescript-gates:
+    runs-on: ubuntu-latest
+    needs:
+      - detect-active-languages
+      - contract-core-gates
+    if: needs.detect-active-languages.outputs.typescript == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Ensure TypeScript tooling is available
+        run: |
+          command -v node >/dev/null || (echo "TypeScript is active but node is unavailable in this runner." >&2; exit 1)
+          command -v npm >/dev/null || (echo "TypeScript is active but npm is unavailable in this runner." >&2; exit 1)
+          command -v npx >/dev/null || (echo "TypeScript is active but npx is unavailable in this runner." >&2; exit 1)
+
+      - name: Run TypeScript contract gates
+        run: |
+          npx tsc --noEmit
+          npx eslint . --max-warnings 0
+          npx prettier --check .
+          npm test
