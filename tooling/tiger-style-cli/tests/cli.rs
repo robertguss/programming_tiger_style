@@ -25,6 +25,26 @@ fn source_file(path: &str) -> String {
     fs::read_to_string(repo_root.join(path)).expect("read source file")
 }
 
+fn assert_manifest(path: &Path, rust: bool, python: bool, typescript: bool) {
+    let content = read_file(path);
+    let rust_expected = if rust { "active" } else { "inactive" };
+    let python_expected = if python { "active" } else { "inactive" };
+    let typescript_expected = if typescript { "active" } else { "inactive" };
+
+    assert!(
+        content.contains(&format!("- rust: {rust_expected}")),
+        "manifest missing rust status"
+    );
+    assert!(
+        content.contains(&format!("- python: {python_expected}")),
+        "manifest missing python status"
+    );
+    assert!(
+        content.contains(&format!("- typescript: {typescript_expected}")),
+        "manifest missing typescript status"
+    );
+}
+
 #[test]
 fn install_writes_required_tree() {
     let temp = TempDir::new().expect("temp dir");
@@ -124,5 +144,76 @@ fn install_dry_run_does_not_write_files() {
             .path()
             .join("contracts/core/AI_AGENT_CORE_CONTRACT.md")
             .exists()
+    );
+}
+
+#[test]
+fn configure_autodetect_sets_manifest_statuses() {
+    let cases = vec![
+        (vec![], (false, false, false)),
+        (vec![("src/lib.rs", "fn x() {}")], (true, false, false)),
+        (vec![("scripts/tool.py", "print('x')")], (false, true, false)),
+        (vec![("web/app.ts", "export const x = 1;")], (false, false, true)),
+        (
+            vec![("src/main.rs", "fn main() {}"), ("web/app.tsx", "export default 1;")],
+            (true, false, true),
+        ),
+    ];
+
+    for (files, expected) in cases {
+        let temp = TempDir::new().expect("temp dir");
+        for (path, content) in files {
+            write_file(&temp.path().join(path), content);
+        }
+
+        cli()
+            .arg("configure")
+            .arg("--target")
+            .arg(temp.path())
+            .arg("--manifest-mode")
+            .arg("autodetect")
+            .assert()
+            .success();
+
+        assert_manifest(
+            &temp.path().join("contracts/ACTIVE_LANGUAGE_CONTRACTS.md"),
+            expected.0,
+            expected.1,
+            expected.2,
+        );
+        assert!(temp.path().join("AGENTS.md").exists());
+    }
+}
+
+#[test]
+fn configure_conflicts_when_agents_exists_without_force() {
+    let temp = TempDir::new().expect("temp dir");
+    write_file(&temp.path().join("AGENTS.md"), "custom agents content\n");
+
+    cli()
+        .arg("configure")
+        .arg("--target")
+        .arg(temp.path())
+        .assert()
+        .code(3)
+        .stderr(contains("conflicts detected"));
+}
+
+#[test]
+fn configure_force_overwrites_agents() {
+    let temp = TempDir::new().expect("temp dir");
+    write_file(&temp.path().join("AGENTS.md"), "custom agents content\n");
+
+    cli()
+        .arg("configure")
+        .arg("--target")
+        .arg(temp.path())
+        .arg("--force")
+        .assert()
+        .success();
+
+    assert_eq!(
+        read_file(&temp.path().join("AGENTS.md")),
+        source_file("docs/templates/AGENTS_TEMPLATE.md")
     );
 }
