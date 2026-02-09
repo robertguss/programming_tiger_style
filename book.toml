@@ -1,0 +1,10 @@
+[book]
+title = "Programming Tiger Style"
+description = "Contract System v2 documentation"
+authors = ["Programming Tiger Style Contributors"]
+language = "en"
+multilingual = false
+src = "docs"
+
+[build]
+build-dir = "docs/book"

@@ -73,6 +73,18 @@ install prefix="$HOME/.local/bin": build-release
 install-cargo:
   cargo install --path tooling/tiger-style-cli --force
 
+# Build mdBook docs to docs/book.
+book-build:
+  mdbook build
+
+# Serve mdBook docs with live reload.
+book-serve:
+  mdbook serve --open
+
+# Install mdBook locally with cargo.
+book-install:
+  cargo install mdbook
+
 # Remove the locally installed CLI binary.
 uninstall prefix="$HOME/.local/bin":
   rm -f {{prefix}}/tiger-style
