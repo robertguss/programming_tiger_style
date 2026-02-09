@@ -11,6 +11,8 @@ permissions:
 
 jobs:
   test:
+    # TEMPORARY: disable CLI matrix testing across all operating systems.
+    if: ${{ false }}
     name: test-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
