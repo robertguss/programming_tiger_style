@@ -90,6 +90,11 @@ fn run(cli: Cli) -> Result<(), AppError> {
             };
             configure::run(&configure_args)?;
 
+            if args.dry_run {
+                println!("DRY-RUN SKIP: doctor");
+                return Ok(());
+            }
+
             let doctor_args = cli::DoctorArgs {
                 target: args.target,
                 strict: false,

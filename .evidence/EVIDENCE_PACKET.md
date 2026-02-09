@@ -42,12 +42,18 @@
   - Slice 2 (`configure`): implemented manifest mode handling (`autodetect`, `all-active`,
     `all-inactive`), language detection with directory exclusions, canonical manifest rendering, and
     AGENTS template creation/conflict handling.
+  - Slice 3 (`doctor` + `bootstrap`): implemented structural checks, manifest parsing, active
+    language tool checks, validator checks with strict/non-strict bash handling, machine-readable
+    JSON output, and bootstrap orchestration with dry-run doctor skip.
 - Command(s) used:
   - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- install_`
   - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- configure_`
+  - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- doctor_`
+  - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- bootstrap_`
 - Passing summary:
   - Install integration tests passed (`4 passed; 0 failed`).
   - Configure integration tests passed (`3 passed; 0 failed`).
+  - Doctor and bootstrap integration tests passed (`4 passed; 0 failed` across targeted runs).
 
 ## Refactor
 
