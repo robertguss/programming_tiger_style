@@ -146,6 +146,7 @@ fn configure_autodetect_sets_manifest_statuses() {
     let cases = vec![
         (vec![], (false, false, false)),
         (vec![("src/lib.rs", "fn x() {}")], (true, false, false)),
+        (vec![("src/LIB.RS", "fn x() {}")], (true, false, false)),
         (
             vec![("scripts/tool.py", "print('x')")],
             (false, true, false),
@@ -218,6 +219,66 @@ fn configure_force_overwrites_agents() {
     assert_eq!(
         read_file(&temp.path().join("AGENTS.md")),
         source_file("docs/templates/AGENTS_TEMPLATE.md")
+    );
+}
+
+#[test]
+fn configure_conflicts_when_manifest_exists_without_force() {
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
+    write_file(
+        &temp.path().join("contracts/ACTIVE_LANGUAGE_CONTRACTS.md"),
+        "# custom manifest\n\n- rust: inactive\n- python: inactive\n- typescript: inactive\n",
+    );
+
+    cli()
+        .arg("configure")
+        .arg("--target")
+        .arg(temp.path())
+        .arg("--manifest-mode")
+        .arg("all-active")
+        .assert()
+        .code(3)
+        .stderr(contains("contracts/ACTIVE_LANGUAGE_CONTRACTS.md"));
+}
+
+#[test]
+fn configure_dry_run_reports_precise_agents_action() {
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
+    write_file(
+        &temp.path().join("AGENTS.md"),
+        &source_file("docs/templates/AGENTS_TEMPLATE.md"),
+    );
+
+    cli()
+        .arg("configure")
+        .arg("--target")
+        .arg(temp.path())
+        .arg("--dry-run")
+        .assert()
+        .success()
+        .stdout(contains("DRY-RUN SKIP: AGENTS.md"));
+}
+
+#[test]
+fn install_with_conflict_does_not_partially_write_other_assets() {
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
+
+    let conflicting = temp.path().join("contracts/core/AI_AGENT_CORE_CONTRACT.md");
+    write_file(&conflicting, "local drift\n");
+
+    let should_stay_missing = temp.path().join("contracts/core/ARCHITECTURE_CONTRACT.md");
+    assert!(!should_stay_missing.exists());
+
+    cli()
+        .arg("install")
+        .arg("--target")
+        .arg(temp.path())
+        .assert()
+        .code(3);
+
+    assert!(
+        !should_stay_missing.exists(),
+        "install should not partially write when conflicts are present"
     );
 }
 
