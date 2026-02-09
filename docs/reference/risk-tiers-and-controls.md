@@ -76,5 +76,5 @@ lowering tier if impact remains high.
 ## Related References
 
 - [Contract Reference Map](./contract-reference-map.md)
-- [Using with Coding Agents](./using-with-coding-agents.md)
-- [CI and Validation](./ci-and-validation.md)
+- [Using with Coding Agents](../guides/using-with-coding-agents.md)
+- [CI and Validation](../guides/ci-and-validation.md)

@@ -117,6 +117,6 @@ Then document the cycle using `templates/EVIDENCE_PACKET_TEMPLATE.md` sections:
 
 ## Next Steps
 
-- Use [Using with Coding Agents](./using-with-coding-agents.md) to run this workflow through Codex
+- Use [Using with Coding Agents](../guides/using-with-coding-agents.md) to run this workflow through Codex
   or another agent.
-- Use [Contract Reference Map](./contract-reference-map.md) when you need exact file purpose.
+- Use [Contract Reference Map](../reference/contract-reference-map.md) when you need exact file purpose.

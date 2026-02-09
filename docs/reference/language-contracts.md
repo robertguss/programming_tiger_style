@@ -98,5 +98,5 @@ All three paths must preserve strict Red -> Green -> Refactor evidence and full-
 ## Related References
 
 - [Risk Tiers and Controls](./risk-tiers-and-controls.md)
-- [Using with Coding Agents](./using-with-coding-agents.md)
+- [Using with Coding Agents](../guides/using-with-coding-agents.md)
 - [Glossary](./glossary.md)

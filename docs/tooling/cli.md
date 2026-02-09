@@ -33,6 +33,18 @@ cargo build --release --manifest-path tooling/tiger-style-cli/Cargo.toml
 cp target/release/tiger-style /usr/local/bin/tiger-style
 ```
 
+### Option C: Install from this repository with Just/Cargo
+
+```bash
+just install-cargo
+```
+
+Or:
+
+```bash
+cargo install --path tooling/tiger-style-cli --force
+```
+
 ## Quick Start
 
 One-command setup in a target repository:
