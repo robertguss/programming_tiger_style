@@ -7,6 +7,43 @@ Default rollout is phased so teams can gain enforcement without stalling deliver
 
 Install core contracts, language contracts, templates, and validators.
 
+### Preferred Path: Tiger Style CLI
+
+If `tiger-style` is installed locally, run:
+
+```bash
+tiger-style bootstrap --target /absolute/path/to/your-repo
+```
+
+This command runs:
+
+1. `install` (copies contract assets),
+2. `configure` (writes `contracts/ACTIVE_LANGUAGE_CONTRACTS.md`, creates `AGENTS.md`),
+3. `doctor` (validates structure/tooling; non-strict by default).
+
+For dry-run preview:
+
+```bash
+tiger-style bootstrap --target /absolute/path/to/your-repo --dry-run
+```
+
+After bootstrap, review language activation:
+
+```text
+# contracts/ACTIVE_LANGUAGE_CONTRACTS.md
+- rust: active|inactive
+- python: active|inactive
+- typescript: active|inactive
+```
+
+Then run an explicit health check:
+
+```bash
+tiger-style doctor --target /absolute/path/to/your-repo --format text
+```
+
+### Fallback Path: Manual Copy Commands
+
 macOS/Linux:
 
 ```bash
@@ -144,6 +181,7 @@ This preserves process continuity while reducing immediate friction.
 
 ## Next Steps
 
+- Use [Tiger Style CLI](./cli.md) for command details and conflict/validation behavior.
 - Use [AGENTS.md Integration](./agents-integration.md) to align agent-specific instructions.
 - Use [Risk Tiers and Controls](./risk-tiers-and-controls.md) to operationalize reviewer and test
   depth by change risk.
