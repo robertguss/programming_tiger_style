@@ -11,6 +11,6 @@ This file declares which language contracts are active for CI enforcement and re
 
 ## Status
 
-- rust: inactive
+- rust: active
 - python: inactive
 - typescript: inactive
