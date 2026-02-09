@@ -33,9 +33,10 @@ The map below references these workflow steps:
 
 | File | What it is | When to use | Required for tier | Workflow step |
 | --- | --- | --- | --- | --- |
-| `contracts/languages/RUST_CODING_CONTRACT.md` | Rust-specific coding and TDD rules | Rust code or tests are in scope | 0-3 for Rust scope | 2, 3, 5 |
-| `contracts/languages/PYTHON_CODING_CONTRACT.md` | Python-specific coding and TDD rules | Python code or tests are in scope | 0-3 for Python scope | 2, 3, 5 |
-| `contracts/languages/TYPESCRIPT_CODING_CONTRACT.md` | TypeScript/JavaScript coding and TDD rules | TS/JS code or tests are in scope | 0-3 for TS/JS scope | 2, 3, 5 |
+| `contracts/ACTIVE_LANGUAGE_CONTRACTS.md` | Active-language manifest for CI and reviewer scope | During setup and when language scope changes | 0-3 | 1, 6 |
+| `contracts/languages/RUST_CODING_CONTRACT.md` | Rust-specific coding and TDD rules | Rust is active and Rust code/tests are in scope | 0-3 for Rust scope | 2, 3, 5 |
+| `contracts/languages/PYTHON_CODING_CONTRACT.md` | Python-specific coding and TDD rules | Python is active and Python code/tests are in scope | 0-3 for Python scope | 2, 3, 5 |
+| `contracts/languages/TYPESCRIPT_CODING_CONTRACT.md` | TypeScript/JavaScript coding and TDD rules | TypeScript is active and TS/JS code/tests are in scope | 0-3 for TS/JS scope | 2, 3, 5 |
 
 ## Templates (`templates/*`)
 
@@ -77,3 +78,4 @@ When multiple files apply to the same change, use the stricter rule. In practice
 3. Risk-tier controls can raise testing/review requirements.
 4. CI validators enforce required evidence and TDD sequence.
 5. Repository policy may require stricter Tier-0 planning artifacts than baseline policy.
+6. Active-language manifest controls which language gates must run in CI.

@@ -17,6 +17,7 @@ cd "$TARGET_REPO"
 mkdir -p contracts/core contracts/languages templates checklists scripts .github/workflows .evidence
 cp -R "$CONTRACT_SRC"/contracts/core/. contracts/core/
 cp -R "$CONTRACT_SRC"/contracts/languages/. contracts/languages/
+cp "$CONTRACT_SRC"/contracts/ACTIVE_LANGUAGE_CONTRACTS.md contracts/ACTIVE_LANGUAGE_CONTRACTS.md
 cp -R "$CONTRACT_SRC"/templates/. templates/
 cp -R "$CONTRACT_SRC"/scripts/. scripts/
 cp "$CONTRACT_SRC"/.github/pull_request_template.md .github/pull_request_template.md
@@ -34,6 +35,7 @@ Set-Location $TargetRepo
 New-Item -ItemType Directory -Force contracts\core, contracts\languages, templates, checklists, scripts, .github\workflows, .evidence | Out-Null
 Copy-Item "$ContractSrc\contracts\core\*" contracts\core -Recurse -Force
 Copy-Item "$ContractSrc\contracts\languages\*" contracts\languages -Recurse -Force
+Copy-Item "$ContractSrc\contracts\ACTIVE_LANGUAGE_CONTRACTS.md" contracts\ACTIVE_LANGUAGE_CONTRACTS.md -Force
 Copy-Item "$ContractSrc\templates\*" templates -Recurse -Force
 Copy-Item "$ContractSrc\scripts\*" scripts -Recurse -Force
 Copy-Item "$ContractSrc\.github\pull_request_template.md" .github\pull_request_template.md -Force
@@ -45,6 +47,15 @@ Run smoke checks:
 ```bash
 bash scripts/validate_tdd_cycle.sh --help
 bash scripts/validate_evidence_packet.sh --help
+```
+
+Set language activation status before enabling CI:
+
+```text
+# contracts/ACTIVE_LANGUAGE_CONTRACTS.md
+- rust: active|inactive
+- python: active|inactive
+- typescript: active|inactive
 ```
 
 ## Phase 2: Risk-Tier Controls + Review Checklists
@@ -72,6 +83,8 @@ For non-GitHub CI systems, port equivalent steps:
 1. Validate shell script syntax.
 2. Validate TDD commit sequence across the change range.
 3. Validate PR body (or attached evidence packet) required headings.
+4. Enforce language gates only for languages marked active in
+   `contracts/ACTIVE_LANGUAGE_CONTRACTS.md` (or explicit autodetect fallback if manifest is absent).
 
 ## Recommended Downstream Directory Layout
 
@@ -79,6 +92,7 @@ For non-GitHub CI systems, port equivalent steps:
 your-repo/
   contracts/
     core/
+    ACTIVE_LANGUAGE_CONTRACTS.md
     languages/
   templates/
   checklists/
@@ -95,6 +109,7 @@ your-repo/
 Minimal viable adoption:
 
 - Core contracts present
+- Active language manifest declared
 - One language contract selected
 - Task packet, test plan, evidence packet templates used
 - Local script validations run before merge

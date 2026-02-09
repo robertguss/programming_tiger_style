@@ -25,15 +25,16 @@ Full docs hub:
 
 ## Contract System v2
 
-Contract System v2 has four layers:
+Contract System v2 has five layers:
 
 1. Core contracts (cross-language): `contracts/core/`
-2. Language contracts:
+2. Language activation manifest: `contracts/ACTIVE_LANGUAGE_CONTRACTS.md`
+3. Language contracts:
 - `contracts/languages/RUST_CODING_CONTRACT.md`
 - `contracts/languages/TYPESCRIPT_CODING_CONTRACT.md`
 - `contracts/languages/PYTHON_CODING_CONTRACT.md`
-3. Delivery templates: `templates/`
-4. Validation and governance:
+4. Delivery templates: `templates/`
+5. Validation and governance:
 - `checklists/`
 - `scripts/`
 - `.github/workflows/contract-gates.yml`
@@ -64,6 +65,7 @@ No Red -> Green -> Refactor evidence means no merge.
 - `contracts/core/DEPENDENCY_POLICY.md`
 - `contracts/core/REVIEW_CONTRACT.md`
 - `contracts/core/INTERACTION_CONTRACT_FOR_CODEX.md`
+- `contracts/ACTIVE_LANGUAGE_CONTRACTS.md`
 
 ### Templates
 

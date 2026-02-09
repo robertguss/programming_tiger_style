@@ -72,8 +72,9 @@ Use this section if your repository includes a self-querying CLI or analyzer.
 ## Contract Integration Statement
 
 This repository follows Contract System v2. Core contracts in `contracts/core/` are mandatory.
-Language contracts in `contracts/languages/` apply based on changed files. In conflicts, the
-stricter rule applies and must be documented in evidence.
+Language contract activation is declared in `contracts/ACTIVE_LANGUAGE_CONTRACTS.md`, and active
+contracts in `contracts/languages/` apply based on changed files. In conflicts, the stricter rule
+applies and must be documented in evidence.
 
 ---
 
