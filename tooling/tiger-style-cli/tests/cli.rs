@@ -217,3 +217,96 @@ fn configure_force_overwrites_agents() {
         source_file("docs/templates/AGENTS_TEMPLATE.md")
     );
 }
+
+#[test]
+fn bootstrap_installs_configures_and_passes_doctor() {
+    let temp = TempDir::new().expect("temp dir");
+
+    cli()
+        .arg("bootstrap")
+        .arg("--target")
+        .arg(temp.path())
+        .assert()
+        .success();
+
+    assert!(temp.path().join("contracts/core/AI_AGENT_CORE_CONTRACT.md").exists());
+    assert!(temp.path().join("AGENTS.md").exists());
+    assert_manifest(
+        &temp.path().join("contracts/ACTIVE_LANGUAGE_CONTRACTS.md"),
+        false,
+        false,
+        false,
+    );
+}
+
+#[test]
+fn bootstrap_dry_run_does_not_write_files() {
+    let temp = TempDir::new().expect("temp dir");
+
+    cli()
+        .arg("bootstrap")
+        .arg("--target")
+        .arg(temp.path())
+        .arg("--dry-run")
+        .assert()
+        .success();
+
+    assert!(!temp.path().join("contracts").exists());
+    assert!(!temp.path().join("AGENTS.md").exists());
+}
+
+#[test]
+fn doctor_json_reports_missing_tools_for_active_languages() {
+    let temp = TempDir::new().expect("temp dir");
+
+    cli()
+        .arg("install")
+        .arg("--target")
+        .arg(temp.path())
+        .assert()
+        .success();
+
+    write_file(
+        &temp.path().join("contracts/ACTIVE_LANGUAGE_CONTRACTS.md"),
+        "# Active Language Contracts Manifest\n\n## Status\n\n- rust: active\n- python: inactive\n- typescript: inactive\n",
+    );
+
+    cli()
+        .arg("doctor")
+        .arg("--target")
+        .arg(temp.path())
+        .arg("--format")
+        .arg("json")
+        .env("PATH", "")
+        .assert()
+        .code(2)
+        .stdout(contains("\"ok\": false"))
+        .stdout(contains("\"cargo\""));
+}
+
+#[test]
+fn doctor_strict_fails_when_bash_is_missing() {
+    let temp = TempDir::new().expect("temp dir");
+
+    cli()
+        .arg("install")
+        .arg("--target")
+        .arg(temp.path())
+        .assert()
+        .success();
+
+    write_file(
+        &temp.path().join("contracts/ACTIVE_LANGUAGE_CONTRACTS.md"),
+        "# Active Language Contracts Manifest\n\n## Status\n\n- rust: inactive\n- python: inactive\n- typescript: inactive\n",
+    );
+
+    cli()
+        .arg("doctor")
+        .arg("--target")
+        .arg(temp.path())
+        .arg("--strict")
+        .env("PATH", "")
+        .assert()
+        .code(2)
+        .stderr(contains("doctor checks failed"));
+}

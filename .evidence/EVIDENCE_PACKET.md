@@ -20,15 +20,19 @@
 - Failing test(s):
   - Slice 1 (`install` baseline): `install_writes_required_tree`
   - Slice 2 (`configure` autodetect): `configure_autodetect_sets_manifest_statuses`
+  - Slice 3 (`doctor` + `bootstrap`): `bootstrap_installs_configures_and_passes_doctor`
 - Command(s) used:
   - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- install_writes_required_tree`
   - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- configure_autodetect_sets_manifest_statuses`
+  - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml --test cli -- bootstrap_installs_configures_and_passes_doctor`
 - Failure summary:
   - Test failed with `install command is not implemented yet` and exit code `2`.
   - Test failed with `configure command is not implemented yet` and exit code `2`.
+  - Test failed with `doctor checks failed` because doctor returned unimplemented status.
 - Why this failure is expected:
   - The command surface was scaffolded first; install behavior had not been implemented yet.
   - Configure behavior and language autodetect had not been implemented yet.
+  - Doctor validation behavior was intentionally deferred until this feature slice.
 
 ## Green
 
