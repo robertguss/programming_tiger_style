@@ -33,9 +33,9 @@ pub fn run(args: &ConfigureArgs) -> Result<(), AppError> {
     if args.dry_run {
         println!(
             "DRY-RUN WRITE: contracts/ACTIVE_LANGUAGE_CONTRACTS.md (rust={}, python={}, typescript={})",
-            if status.rust { "active" } else { "inactive" },
-            if status.python { "active" } else { "inactive" },
-            if status.typescript { "active" } else { "inactive" }
+            status_label(status.rust),
+            status_label(status.python),
+            status_label(status.typescript)
         );
         if agents_path.exists() {
             println!("DRY-RUN SKIP/OVERWRITE: AGENTS.md");
@@ -71,4 +71,12 @@ pub fn run(args: &ConfigureArgs) -> Result<(), AppError> {
     }
 
     Ok(())
+}
+
+fn status_label(active: bool) -> &'static str {
+    if active {
+        "active"
+    } else {
+        "inactive"
+    }
 }
