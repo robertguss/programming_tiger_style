@@ -95,8 +95,11 @@ pub fn run(args: &DoctorArgs) -> Result<DoctorReport, AppError> {
         check_tool(tool, required, &mut checks, &mut missing_tools, reason);
     }
 
+    let bash_ready = bash_is_usable();
+
     run_validator_check(
         &args.target,
+        bash_ready,
         args.strict,
         &mut checks,
         &mut warnings,
@@ -104,6 +107,7 @@ pub fn run(args: &DoctorArgs) -> Result<DoctorReport, AppError> {
     )?;
     run_validator_check(
         &args.target,
+        bash_ready,
         args.strict,
         &mut checks,
         &mut warnings,
@@ -173,12 +177,13 @@ fn check_tool(
 
 fn run_validator_check(
     target: &Path,
+    bash_ready: bool,
     strict: bool,
     checks: &mut Vec<DoctorCheck>,
     warnings: &mut Vec<String>,
     script: &str,
 ) -> Result<(), AppError> {
-    if command_exists("bash") {
+    if bash_ready {
         let status = Command::new("bash")
             .arg(script)
             .arg("--help")
@@ -197,16 +202,16 @@ fn run_validator_check(
             },
         });
     } else {
-        let message = format!("bash not found; skipped validator check for {script}");
+        let message = format!("bash unavailable; skipped validator check for {script}");
         warnings.push(message.clone());
         checks.push(DoctorCheck {
             name: format!("validator: {script}"),
             passed: !strict,
             required: strict,
             details: if strict {
-                "bash missing and strict mode enabled".to_string()
+                "bash unavailable and strict mode enabled".to_string()
             } else {
-                "bash missing; warning only in non-strict mode".to_string()
+                "bash unavailable; warning only in non-strict mode".to_string()
             },
         });
     }
@@ -254,6 +259,18 @@ fn command_exists(command: &str) -> bool {
     }
 
     false
+}
+
+fn bash_is_usable() -> bool {
+    if !command_exists("bash") {
+        return false;
+    }
+
+    Command::new("bash")
+        .arg("--version")
+        .status()
+        .map(|status| status.success())
+        .unwrap_or(false)
 }
 
 #[cfg(windows)]

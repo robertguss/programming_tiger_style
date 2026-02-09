@@ -105,6 +105,9 @@ fn write_asset(
     executable: bool,
     dry_run: bool,
 ) -> Result<(), AppError> {
+    #[cfg(not(unix))]
+    let _ = executable;
+
     if dry_run {
         return Ok(());
     }

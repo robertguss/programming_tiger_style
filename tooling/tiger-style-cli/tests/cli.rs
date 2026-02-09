@@ -377,3 +377,45 @@ fn doctor_strict_fails_when_bash_is_missing() {
         .code(2)
         .stderr(contains("doctor checks failed"));
 }
+
+#[test]
+fn doctor_non_strict_allows_unusable_bash() {
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
+
+    cli()
+        .arg("install")
+        .arg("--target")
+        .arg(temp.path())
+        .assert()
+        .success();
+
+    write_file(
+        &temp.path().join("contracts/ACTIVE_LANGUAGE_CONTRACTS.md"),
+        "# Active Language Contracts Manifest\n\n## Status\n\n- rust: inactive\n- python: inactive\n- typescript: inactive\n",
+    );
+
+    let path_dir = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
+    let fake_bash = path_dir.path().join("bash");
+    write_file(&fake_bash, "#!/usr/bin/env sh\nexit 1\n");
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let mut perms = fs::metadata(&fake_bash)
+            .unwrap_or_else(|err| panic!("stat fake bash: {err}"))
+            .permissions();
+        perms.set_mode(0o755);
+        fs::set_permissions(&fake_bash, perms)
+            .unwrap_or_else(|err| panic!("chmod fake bash: {err}"));
+    }
+
+    cli()
+        .arg("doctor")
+        .arg("--target")
+        .arg(temp.path())
+        .env("PATH", path_dir.path())
+        .assert()
+        .success()
+        .stdout(contains(
+            "bash unavailable; warning only in non-strict mode",
+        ));
+}
