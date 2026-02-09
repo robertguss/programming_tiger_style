@@ -24,6 +24,16 @@ steps for:
 
 The provider can change; the contract semantics should not.
 
+## How do we roll this out in a large legacy codebase?
+
+Use [Legacy Adoption Mode](./legacy-adoption-mode.md) and ratchet in stages:
+
+1. Stage A: enforce on new/touched files.
+2. Stage B: expand module by module with explicit milestones.
+3. Stage C: full-repository strictness.
+
+This staged model does not waive TDD, evidence, or risk-tier controls.
+
 ## How do I handle docs-only changes?
 
 By default, `scripts/validate_tdd_cycle.sh` recognizes docs/contracts-only diffs and skips strict

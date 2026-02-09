@@ -9,7 +9,8 @@ This project enforces contract compliance through local scripts and a GitHub wor
 What it checks:
 
 - Commit subject prefixes are allowed (`RED`, `GREEN`, `REFACTOR`, `DOCS`, `CHORE`, `BUILD`, `TEST`).
-- Commit order contains Red -> Green -> Refactor for non-doc changes.
+- Commit order follows strict Red -> Green -> Refactor state transitions for non-doc changes.
+- Incomplete trailing cycles fail.
 - Invalid sequencing fails the run.
 
 Typical usage:
@@ -30,6 +31,7 @@ What it checks:
 
 - Required headings exist in evidence packet or PR body.
 - Placeholder markers are not present.
+- `Risk Tier`, `Red`, `Green`, and `Refactor` sections include required semantic fields.
 
 Typical usage with PR body markdown file:
 
@@ -49,11 +51,11 @@ Workflow: `.github/workflows/contract-gates.yml`
 
 On pull requests and pushes to `main`, it performs:
 
-1. Checkout with full history.
-2. Shell syntax checks for validator scripts.
-3. TDD sequence validation using a computed base SHA.
-4. PR body evidence heading validation (`pull_request` events).
-5. Repository evidence file validation when `.evidence/EVIDENCE_PACKET.md` exists (`push` events).
+1. `detect-active-languages` job: read `contracts/ACTIVE_LANGUAGE_CONTRACTS.md` (or fallback
+   autodetect) and expose active language flags.
+2. `contract-core-gates` job: shell syntax checks, TDD sequence validation, and evidence validation.
+3. Conditional `rust-gates` / `python-gates` / `typescript-gates` jobs for active languages only.
+4. Explicit tooling-availability checks for each active language before running language gates.
 
 ## PR Body Evidence Requirements
 
@@ -143,6 +145,14 @@ bash scripts/validate_evidence_packet.sh --pr-body .github/pull_request_template
 
 If your project does not use GitHub Actions, keep the same two validator scripts and run them in your
 CI provider with equivalent merge-blocking semantics.
+
+## Legacy Rollout Guidance
+
+When adopting in a legacy repository:
+
+1. Keep core gates blocking from day one.
+2. Use language-gate ratchet stages from [Legacy Adoption Mode](./legacy-adoption-mode.md).
+3. Track temporary waivers with expiration criteria in PR evidence.
 
 ## Related References
 
