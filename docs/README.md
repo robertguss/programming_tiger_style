@@ -18,8 +18,9 @@ Start with [Using with Coding Agents](./using-with-coding-agents.md), then revie
 
 ### I want to port this into my own repo
 
-Start with [Adopting in a New Project](./adopting-in-a-new-project.md). It provides phased
-adoption, copy commands, and rollback guidance.
+Start with [Tiger Style CLI](./cli.md) for one-command setup, then use
+[Adopting in a New Project](./adopting-in-a-new-project.md) for phased adoption and rollback
+guidance.
 
 ## Docs Map
 
@@ -29,6 +30,7 @@ adoption, copy commands, and rollback guidance.
   generic adaptation notes.
 - [Adopting in a New Project](./adopting-in-a-new-project.md): Phased rollout and bootstrap
   commands for downstream repositories.
+- [Tiger Style CLI](./cli.md): Automated install/configure/doctor/bootstrap commands.
 - [Legacy Adoption Mode](./legacy-adoption-mode.md): Staged strictness and ratchet rollout for
   legacy repositories.
 - [Contract Reference Map](./contract-reference-map.md): Canonical file-to-purpose index for

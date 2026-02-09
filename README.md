@@ -10,6 +10,7 @@ Contract System v2 for AI-assisted software development.
 Start here:
 
 - [Quickstart](./docs/quickstart.md)
+- [Tiger Style CLI](./docs/cli.md)
 - [Using with Coding Agents](./docs/using-with-coding-agents.md)
 - [Adopting in a New Project](./docs/adopting-in-a-new-project.md)
 - [Contract Reference Map](./docs/contract-reference-map.md)
@@ -119,3 +120,10 @@ Then require explicit evidence in PR output.
 ## Repository Status
 
 This repository stores contract definitions, templates, and enforcement automation.
+
+It also ships a Rust CLI (`tooling/tiger-style-cli`) that automates downstream installation and
+configuration:
+
+```bash
+tiger-style bootstrap --target /absolute/path/to/your-repo
+```
