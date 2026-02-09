@@ -140,14 +140,28 @@ require_field() {
   fi
 }
 
+validate_section_fields() {
+  local section_name="$1"
+  local section_body="$2"
+  shift 2
+
+  local spec
+  for spec in "$@"; do
+    local field_regex="${spec%%|*}"
+    local field_display="${spec##*|}"
+    require_field "$section_name" "$section_body" "$field_regex" "$field_display"
+  done
+}
+
 RISK_SECTION="$(get_section_body "## Risk Tier")"
 RED_SECTION="$(get_section_body "## Red")"
 GREEN_SECTION="$(get_section_body "## Green")"
 REFACTOR_SECTION="$(get_section_body "## Refactor")"
 
 if [[ -n "$RISK_SECTION" ]]; then
-  require_field "Risk Tier" "$RISK_SECTION" "Tier" "Tier"
-  require_field "Risk Tier" "$RISK_SECTION" "Rationale" "Rationale"
+  validate_section_fields "Risk Tier" "$RISK_SECTION" \
+    "Tier|Tier" \
+    "Rationale|Rationale"
 
   tier_line="$(grep -Eim1 '^[[:space:]]*[-*][[:space:]]*Tier[[:space:]]*:' <<<"$RISK_SECTION" || true)"
   if [[ -n "$tier_line" ]]; then
@@ -164,24 +178,27 @@ if [[ -n "$RISK_SECTION" ]]; then
 fi
 
 if [[ -n "$RED_SECTION" ]]; then
-  require_field "Red" "$RED_SECTION" "Failing[[:space:]]+test\(s\)" "Failing test(s)"
-  require_field "Red" "$RED_SECTION" "Command\(s\)" "Command(s)"
-  require_field "Red" "$RED_SECTION" "Failure[[:space:]]+summary" "Failure summary"
-  require_field "Red" "$RED_SECTION" "Expected[[:space:]]+failure[[:space:]]+rationale" "Expected failure rationale"
+  validate_section_fields "Red" "$RED_SECTION" \
+    "Failing[[:space:]]+test\\(s\\)|Failing test(s)" \
+    "Command\\(s\\)|Command(s)" \
+    "Failure[[:space:]]+summary|Failure summary" \
+    "Expected[[:space:]]+failure[[:space:]]+rationale|Expected failure rationale"
 fi
 
 if [[ -n "$GREEN_SECTION" ]]; then
-  require_field "Green" "$GREEN_SECTION" "Command\(s\)" "Command(s)"
-  require_field "Green" "$GREEN_SECTION" "Passing[[:space:]]+summary" "Passing summary"
+  validate_section_fields "Green" "$GREEN_SECTION" \
+    "Command\\(s\\)|Command(s)" \
+    "Passing[[:space:]]+summary|Passing summary"
 fi
 
 if [[ -n "$REFACTOR_SECTION" ]]; then
-  require_field "Refactor" "$REFACTOR_SECTION" "Why[[:space:]]+behavior[[:space:]]+is[[:space:]]+unchanged" "Why behavior is unchanged"
-  require_field "Refactor" "$REFACTOR_SECTION" "Confirmation[[:space:]]+commands" "Confirmation commands"
+  validate_section_fields "Refactor" "$REFACTOR_SECTION" \
+    "Why[[:space:]]+behavior[[:space:]]+is[[:space:]]+unchanged|Why behavior is unchanged" \
+    "Confirmation[[:space:]]+commands|Confirmation commands"
 fi
 
 if [[ "$errors" -ne 0 ]]; then
-  echo "Evidence packet validation failed." >&2
+  echo "Evidence packet validation failed. Resolve missing headings/fields listed above." >&2
   exit 1
 fi
 
