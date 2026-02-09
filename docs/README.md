@@ -41,6 +41,8 @@ adoption, copy commands, and rollback guidance.
   instructions with this contract system.
 - [AGENTS.md Starter Template](./templates/AGENTS_TEMPLATE.md): Copyable template for downstream
   repositories.
+- [Tiger Style v1.1 Hardening Decisions](./v1.1-hardening-decisions.md): Canonical policy,
+  enforcement, and adoption decisions for v1.1.
 - [FAQ](./faq.md): Operational adoption and enforcement answers.
 - [Glossary](./glossary.md): Plain-language terms used across this project.
 

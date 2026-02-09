@@ -27,6 +27,26 @@ When multiple contracts apply, use this precedence:
 
 If two rules conflict, apply the stricter rule and document the decision in the evidence packet.
 
+## Canonical v1.1 Decisions
+
+Tiger Style v1.1 locks these decisions:
+
+1. Policy truth: contract text is authoritative.
+2. Enforcement truth: validators and CI gates must enforce active contract requirements.
+3. Adoption truth: staged rollout is allowed only for legacy style debt; TDD, evidence, and
+   risk-tier controls remain mandatory.
+
+## Precedence Across Policy, Enforcement, and Docs
+
+If contract text, validators/workflows, and documentation diverge, resolve using:
+
+1. Core contract text.
+2. Enforcement implementation (`scripts/*`, `.github/workflows/*`).
+3. Documentation and examples.
+
+Any divergence is a compliance defect and must be fixed before merge, or covered by an explicit,
+timeboxed exception with compensating controls in the evidence packet.
+
 ## Operating Modes
 
 AI agents must operate in two explicit modes:
