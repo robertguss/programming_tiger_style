@@ -1,0 +1,4 @@
+RED: add failing test|src/app.rs|red one
+GREEN: minimal implementation|src/app.rs|green one
+REFACTOR: cleanup|src/app.rs|refactor one
+GREEN: add behavior without new red|src/app.rs|green stray

@@ -29,6 +29,8 @@ adoption, copy commands, and rollback guidance.
   generic adaptation notes.
 - [Adopting in a New Project](./adopting-in-a-new-project.md): Phased rollout and bootstrap
   commands for downstream repositories.
+- [Legacy Adoption Mode](./legacy-adoption-mode.md): Staged strictness and ratchet rollout for
+  legacy repositories.
 - [Contract Reference Map](./contract-reference-map.md): Canonical file-to-purpose index for
   contracts, templates, checklists, scripts, and CI gates.
 - [Risk Tiers and Controls](./risk-tiers-and-controls.md): Practical tier assignment and required
@@ -41,6 +43,8 @@ adoption, copy commands, and rollback guidance.
   instructions with this contract system.
 - [AGENTS.md Starter Template](./templates/AGENTS_TEMPLATE.md): Copyable template for downstream
   repositories.
+- [Tiger Style v1.1 Hardening Decisions](./v1.1-hardening-decisions.md): Canonical policy,
+  enforcement, and adoption decisions for v1.1.
 - [FAQ](./faq.md): Operational adoption and enforcement answers.
 - [Glossary](./glossary.md): Plain-language terms used across this project.
 

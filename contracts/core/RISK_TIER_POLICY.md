@@ -51,3 +51,6 @@ Tier may be reduced only with documented rationale and reviewer approval.
 ## Auditing
 
 Every PR must declare tier and rationale in the evidence packet.
+
+Repository policy may enforce stricter controls than this baseline (for example, requiring task
+packets and test plans for Tier 0). Stricter policy takes precedence.

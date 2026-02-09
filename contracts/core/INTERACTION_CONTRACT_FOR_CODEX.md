@@ -11,7 +11,7 @@ context boundaries.
 
 ## Required Request Structure
 
-Use `templates/TASK_PACKET_TEMPLATE.md` for implementation requests.
+Use `templates/TASK_PACKET_TEMPLATE.md` for Tier 1-3 implementation requests.
 
 Minimum required fields:
 
@@ -21,6 +21,9 @@ Minimum required fields:
 4. Constraints and forbidden approaches.
 5. Acceptance tests.
 6. Risk tier.
+
+Tier 0 requests may use lightweight planning notes unless repository policy explicitly requires the
+full task packet/test plan.
 
 ## Collaboration Protocol
 

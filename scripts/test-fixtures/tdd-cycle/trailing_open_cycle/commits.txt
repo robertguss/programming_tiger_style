@@ -1,0 +1,4 @@
+RED: add first failing test|src/app.rs|red one
+GREEN: implement first test|src/app.rs|green one
+REFACTOR: cleanup first cycle|src/app.rs|refactor one
+RED: add second failing test|src/app.rs|red two
