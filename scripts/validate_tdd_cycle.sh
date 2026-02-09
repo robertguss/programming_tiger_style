@@ -81,13 +81,40 @@ if [[ "$STRICT_DOC_ONLY" -eq 0 ]]; then
   fi
 fi
 
-SEEN_RED=0
-SEEN_GREEN=0
-SEEN_REFACTOR=0
+STATE="READY_FOR_RED"
+COMPLETED_CYCLES=0
+LAST_STAGE_COMMIT=""
+LAST_STAGE_SUBJECT=""
+
+print_sequence_error() {
+  local commit="$1"
+  local subject="$2"
+  local message="$3"
+  local expected
+
+  case "$STATE" in
+    READY_FOR_RED)
+      expected="RED (or non-cycle commit: DOCS/CHORE/BUILD/TEST)"
+      ;;
+    READY_FOR_GREEN)
+      expected="GREEN (or non-cycle commit: DOCS/CHORE/BUILD/TEST)"
+      ;;
+    READY_FOR_REFACTOR)
+      expected="REFACTOR (or non-cycle commit: DOCS/CHORE/BUILD/TEST)"
+      ;;
+    *)
+      expected="RED"
+      ;;
+  esac
+
+  echo "$message" >&2
+  echo "Commit: $commit ($subject)" >&2
+  echo "State before commit: $STATE" >&2
+  echo "Expected next prefix: $expected" >&2
+  exit 1
+}
 
 for commit in "${COMMITS[@]}"; do
-  # Ignore merge commits (for example, GitHub synthetic PR merge commits) because
-  # they are integration artifacts, not authored TDD lifecycle commits.
   parent_line="$(git rev-list --parents -n 1 "$commit")"
   parent_count=$(( $(wc -w <<<"$parent_line") - 1 ))
   if [[ "$parent_count" -gt 1 ]]; then
@@ -99,21 +126,31 @@ for commit in "${COMMITS[@]}"; do
 
   case "$prefix" in
     RED)
-      SEEN_RED=1
+      if [[ "$STATE" != "READY_FOR_RED" ]]; then
+        print_sequence_error "$commit" "$subject" \
+          "Invalid sequence: RED starts a new cycle before the current cycle is complete."
+      fi
+      STATE="READY_FOR_GREEN"
+      LAST_STAGE_COMMIT="$commit"
+      LAST_STAGE_SUBJECT="$subject"
       ;;
     GREEN)
-      if [[ "$SEEN_RED" -eq 0 ]]; then
-        echo "Invalid sequence: GREEN before RED in commit $commit ($subject)" >&2
-        exit 1
+      if [[ "$STATE" != "READY_FOR_GREEN" ]]; then
+        print_sequence_error "$commit" "$subject" "Invalid sequence: GREEN requires an open RED stage."
       fi
-      SEEN_GREEN=1
+      STATE="READY_FOR_REFACTOR"
+      LAST_STAGE_COMMIT="$commit"
+      LAST_STAGE_SUBJECT="$subject"
       ;;
     REFACTOR)
-      if [[ "$SEEN_GREEN" -eq 0 ]]; then
-        echo "Invalid sequence: REFACTOR before GREEN in commit $commit ($subject)" >&2
-        exit 1
+      if [[ "$STATE" != "READY_FOR_REFACTOR" ]]; then
+        print_sequence_error "$commit" "$subject" \
+          "Invalid sequence: REFACTOR requires an open GREEN stage."
       fi
-      SEEN_REFACTOR=1
+      STATE="READY_FOR_RED"
+      LAST_STAGE_COMMIT="$commit"
+      LAST_STAGE_SUBJECT="$subject"
+      COMPLETED_CYCLES=$((COMPLETED_CYCLES + 1))
       ;;
     DOCS|CHORE|BUILD|TEST)
       ;;
@@ -125,10 +162,28 @@ for commit in "${COMMITS[@]}"; do
   esac
 done
 
-if [[ "$SEEN_RED" -eq 0 || "$SEEN_GREEN" -eq 0 || "$SEEN_REFACTOR" -eq 0 ]]; then
-  echo "Missing required TDD sequence in range $RANGE" >&2
-  echo "Observed: RED=$SEEN_RED GREEN=$SEEN_GREEN REFACTOR=$SEEN_REFACTOR" >&2
+if [[ "$COMPLETED_CYCLES" -eq 0 ]]; then
+  echo "Missing required complete Red -> Green -> Refactor cycle in range $RANGE" >&2
   exit 1
 fi
 
-echo "TDD sequence validation passed for range $RANGE"
+if [[ "$STATE" != "READY_FOR_RED" ]]; then
+  case "$STATE" in
+    READY_FOR_GREEN)
+      echo "Incomplete TDD cycle: RED stage was opened but GREEN/REFACTOR were not completed." >&2
+      ;;
+    READY_FOR_REFACTOR)
+      echo "Incomplete TDD cycle: GREEN stage was completed but REFACTOR is missing." >&2
+      ;;
+    *)
+      echo "Incomplete TDD cycle detected." >&2
+      ;;
+  esac
+
+  if [[ -n "$LAST_STAGE_COMMIT" ]]; then
+    echo "Last completed stage commit: $LAST_STAGE_COMMIT ($LAST_STAGE_SUBJECT)" >&2
+  fi
+  exit 1
+fi
+
+echo "TDD sequence validation passed for range $RANGE (completed cycles: $COMPLETED_CYCLES)"
