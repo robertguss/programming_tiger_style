@@ -9,6 +9,9 @@ use crate::conflicts::ConflictError;
 use crate::detect::{autodetect_languages, render_manifest, LanguageStatus};
 use crate::{ensure_target_exists, AppError};
 
+const MANIFEST_REL_PATH: &str = "contracts/ACTIVE_LANGUAGE_CONTRACTS.md";
+const AGENTS_REL_PATH: &str = "AGENTS.md";
+
 pub fn run(args: &ConfigureArgs) -> Result<(), AppError> {
     ensure_target_exists(&args.target)?;
 
@@ -20,8 +23,8 @@ pub fn run(args: &ConfigureArgs) -> Result<(), AppError> {
 
     let manifest_bytes = render_manifest(status).into_bytes();
     let manifest_baseline = assets::manifest_template();
-    let manifest_path = args.target.join("contracts/ACTIVE_LANGUAGE_CONTRACTS.md");
-    let agents_path = args.target.join("AGENTS.md");
+    let manifest_path = args.target.join(MANIFEST_REL_PATH);
+    let agents_path = args.target.join(AGENTS_REL_PATH);
     let agents_template = assets::agents_template();
     let mut conflicts_found = Vec::new();
 
@@ -74,9 +77,7 @@ pub fn run(args: &ConfigureArgs) -> Result<(), AppError> {
     }
 
     match manifest_action {
-        ConfigureAction::Skip => {
-            println!("SKIP (unchanged): contracts/ACTIVE_LANGUAGE_CONTRACTS.md")
-        }
+        ConfigureAction::Skip => println!("SKIP (unchanged): {MANIFEST_REL_PATH}"),
         ConfigureAction::Create | ConfigureAction::Overwrite => {
             if let Some(parent) = manifest_path.parent() {
                 fs::create_dir_all(parent)
@@ -85,30 +86,24 @@ pub fn run(args: &ConfigureArgs) -> Result<(), AppError> {
             fs::write(&manifest_path, &manifest_bytes)
                 .with_context(|| format!("failed to write {}", manifest_path.display()))?;
             match manifest_action {
-                ConfigureAction::Create => {
-                    println!("CREATE: contracts/ACTIVE_LANGUAGE_CONTRACTS.md")
-                }
-                ConfigureAction::Overwrite => {
-                    println!("OVERWRITE: contracts/ACTIVE_LANGUAGE_CONTRACTS.md")
-                }
+                ConfigureAction::Create => println!("CREATE: {MANIFEST_REL_PATH}"),
+                ConfigureAction::Overwrite => println!("OVERWRITE: {MANIFEST_REL_PATH}"),
                 ConfigureAction::Skip => {}
             }
         }
     }
 
     match agents_action {
-        ConfigureAction::Skip => {
-            println!("SKIP (unchanged): AGENTS.md");
-        }
+        ConfigureAction::Skip => println!("SKIP (unchanged): {AGENTS_REL_PATH}"),
         ConfigureAction::Overwrite => {
             fs::write(&agents_path, agents_template)
                 .with_context(|| format!("failed to write {}", agents_path.display()))?;
-            println!("OVERWRITE: AGENTS.md");
+            println!("OVERWRITE: {AGENTS_REL_PATH}");
         }
         ConfigureAction::Create => {
             fs::write(&agents_path, agents_template)
                 .with_context(|| format!("failed to write {}", agents_path.display()))?;
-            println!("CREATE: AGENTS.md");
+            println!("CREATE: {AGENTS_REL_PATH}");
         }
     }
 
@@ -123,23 +118,17 @@ fn log_manifest_action(action: &ConfigureAction, status: LanguageStatus) {
         status_label(status.typescript)
     );
     match action {
-        ConfigureAction::Skip => {
-            println!("DRY-RUN SKIP: contracts/ACTIVE_LANGUAGE_CONTRACTS.md {details}")
-        }
-        ConfigureAction::Create => {
-            println!("DRY-RUN CREATE: contracts/ACTIVE_LANGUAGE_CONTRACTS.md {details}")
-        }
-        ConfigureAction::Overwrite => {
-            println!("DRY-RUN OVERWRITE: contracts/ACTIVE_LANGUAGE_CONTRACTS.md {details}")
-        }
+        ConfigureAction::Skip => println!("DRY-RUN SKIP: {MANIFEST_REL_PATH} {details}"),
+        ConfigureAction::Create => println!("DRY-RUN CREATE: {MANIFEST_REL_PATH} {details}"),
+        ConfigureAction::Overwrite => println!("DRY-RUN OVERWRITE: {MANIFEST_REL_PATH} {details}"),
     }
 }
 
 fn log_agents_action(action: &ConfigureAction) {
     match action {
-        ConfigureAction::Skip => println!("DRY-RUN SKIP: AGENTS.md"),
-        ConfigureAction::Create => println!("DRY-RUN CREATE: AGENTS.md"),
-        ConfigureAction::Overwrite => println!("DRY-RUN OVERWRITE: AGENTS.md"),
+        ConfigureAction::Skip => println!("DRY-RUN SKIP: {AGENTS_REL_PATH}"),
+        ConfigureAction::Create => println!("DRY-RUN CREATE: {AGENTS_REL_PATH}"),
+        ConfigureAction::Overwrite => println!("DRY-RUN OVERWRITE: {AGENTS_REL_PATH}"),
     }
 }
 
