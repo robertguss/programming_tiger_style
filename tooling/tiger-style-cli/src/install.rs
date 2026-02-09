@@ -35,19 +35,11 @@ pub fn run(args: &InstallArgs) -> Result<(), AppError> {
             }
             Some(_) => {
                 write_asset(&destination, &asset.contents, asset.executable, args.dry_run)?;
-                if args.dry_run {
-                    println!("DRY-RUN OVERWRITE: {}", asset.relative_path);
-                } else {
-                    println!("OVERWRITE: {}", asset.relative_path);
-                }
+                log_action("OVERWRITE", &asset.relative_path, args.dry_run);
             }
             None => {
                 write_asset(&destination, &asset.contents, asset.executable, args.dry_run)?;
-                if args.dry_run {
-                    println!("DRY-RUN CREATE: {}", asset.relative_path);
-                } else {
-                    println!("CREATE: {}", asset.relative_path);
-                }
+                log_action("CREATE", &asset.relative_path, args.dry_run);
             }
         }
     }
@@ -83,4 +75,12 @@ fn write_asset(path: &Path, contents: &[u8], executable: bool, dry_run: bool) ->
     }
 
     Ok(())
+}
+
+fn log_action(action: &str, relative_path: &str, dry_run: bool) {
+    if dry_run {
+        println!("DRY-RUN {action}: {relative_path}");
+    } else {
+        println!("{action}: {relative_path}");
+    }
 }

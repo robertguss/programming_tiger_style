@@ -38,9 +38,12 @@
 
 ## Refactor
 
-- Structural improvements made: To be filled.
-- Why behavior is unchanged: To be filled.
-- Command(s) used to confirm tests remain green: To be filled.
+- Structural improvements made:
+  - Slice 1 (`install`): extracted shared action logging helper to remove duplicated output logic.
+- Why behavior is unchanged:
+  - Refactor touched only log-path structure and kept identical create/overwrite semantics.
+- Command(s) used to confirm tests remain green:
+  - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml`
 
 ## Invariants
 
