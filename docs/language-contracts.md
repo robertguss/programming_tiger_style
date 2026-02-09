@@ -13,6 +13,14 @@ actual code scope, not team preference.
 All three enforce strict TDD and include language-specific rules for error handling, type safety,
 performance boundaries, and warning-free CI.
 
+## Recursion and Test-Code Clarifications
+
+- Recursion is allowed only with bounded depth/size behavior and documented failure modes.
+- Depth and malformed-structure boundary tests are required when recursion is used.
+- Test-only convenience patterns are allowed in a limited scope when failures are intentional and
+  local to setup/assertion.
+- Test allowances cannot be used to mask production-path typing/error-handling defects.
+
 ## Precedence and Composition
 
 Rules compose in this order:
@@ -85,6 +93,7 @@ All three paths must preserve strict Red -> Green -> Refactor evidence and full-
 - Performance and security constraints are asserted in each implementation.
 - Evidence packet references all language-specific test commands used.
 - Manifest status matches active code ownership and CI expectations.
+- Recursion and test-code allowance decisions are documented with boundary test evidence.
 
 ## Related References
 

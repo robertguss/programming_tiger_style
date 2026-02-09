@@ -42,7 +42,11 @@ This contract applies to:
 
 ### 1) Keep control flow simple and analyzable
 
-- Do not use recursion unless explicitly approved in a design note.
+- Recursion is allowed only when input is finite/acyclic by construction or explicit depth/size
+  limits are enforced.
+- Document recursion rationale and failure mode in design notes/evidence.
+- Add boundary tests for recursion depth and malformed structures.
+- When depth risk is non-trivial, document why an iterative alternative is not preferred.
 - Every loop must have a clear upper bound, or a clear reason it is intentionally non-terminating.
 - Prefer explicit branches over dense compound conditions.
 - Split complex branching so positive and negative cases are both handled explicitly.
@@ -110,6 +114,13 @@ This contract applies to:
 - All code changes must follow Red -> Green -> Refactor in strict order.
 - Each cycle should be small and focused on one behavior at a time.
 - Refactors that change behavior require a new Red step first.
+
+## Test Code Allowances
+
+- Test-only code may use limited convenience patterns (broad assertion helpers or intentional
+  exception fixtures) when failures are local to setup/assertion behavior.
+- Test allowances must not be used to hide production-path error handling defects.
+- Keep test helpers separate from production modules so review scope is explicit.
 
 ## Python-Specific Style and API Rules
 
