@@ -1,0 +1,6 @@
+RED: add first failing test|src/app.rs|red one
+GREEN: minimal implementation for first test|src/app.rs|green one
+REFACTOR: cleanup after first cycle|src/app.rs|refactor one
+RED: add second failing test|src/app.rs|red two
+GREEN: minimal implementation for second test|src/app.rs|green two
+REFACTOR: cleanup after second cycle|src/app.rs|refactor two
