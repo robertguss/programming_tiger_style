@@ -256,21 +256,18 @@ fn command_exists(command: &str) -> bool {
     false
 }
 
+#[cfg(windows)]
 fn windows_extensions() -> Vec<String> {
-    #[cfg(windows)]
-    {
-        let exts = env::var("PATHEXT").unwrap_or_else(|_| ".COM;.EXE;.BAT;.CMD".to_string());
-        return exts
-            .split(';')
-            .filter(|entry| !entry.trim().is_empty())
-            .map(|entry| entry.trim().to_ascii_lowercase())
-            .collect();
-    }
+    let exts = env::var("PATHEXT").unwrap_or_else(|_| ".COM;.EXE;.BAT;.CMD".to_string());
+    exts.split(';')
+        .filter(|entry| !entry.trim().is_empty())
+        .map(|entry| entry.trim().to_ascii_lowercase())
+        .collect()
+}
 
-    #[cfg(not(windows))]
-    {
-        vec!["".to_string()]
-    }
+#[cfg(not(windows))]
+fn windows_extensions() -> Vec<String> {
+    vec!["".to_string()]
 }
 
 fn is_executable_file(path: &PathBuf) -> bool {
@@ -285,7 +282,7 @@ fn is_executable_file(path: &PathBuf) -> bool {
         if let Ok(meta) = fs::metadata(path) {
             return meta.permissions().mode() & 0o111 != 0;
         }
-        return false;
+        false
     }
 
     #[cfg(not(unix))]

@@ -31,14 +31,28 @@ pub fn run(args: &InstallArgs) -> Result<(), AppError> {
                 println!("SKIP (unchanged): {}", asset.relative_path);
             }
             Some(current) if !args.force => {
-                conflict_list.push(conflicts::from_bytes(&destination, &current, &asset.contents));
+                conflict_list.push(conflicts::from_bytes(
+                    &destination,
+                    &current,
+                    &asset.contents,
+                ));
             }
             Some(_) => {
-                write_asset(&destination, &asset.contents, asset.executable, args.dry_run)?;
+                write_asset(
+                    &destination,
+                    &asset.contents,
+                    asset.executable,
+                    args.dry_run,
+                )?;
                 log_action("OVERWRITE", &asset.relative_path, args.dry_run);
             }
             None => {
-                write_asset(&destination, &asset.contents, asset.executable, args.dry_run)?;
+                write_asset(
+                    &destination,
+                    &asset.contents,
+                    asset.executable,
+                    args.dry_run,
+                )?;
                 log_action("CREATE", &asset.relative_path, args.dry_run);
             }
         }
@@ -51,7 +65,12 @@ pub fn run(args: &InstallArgs) -> Result<(), AppError> {
     Ok(())
 }
 
-fn write_asset(path: &Path, contents: &[u8], executable: bool, dry_run: bool) -> Result<(), AppError> {
+fn write_asset(
+    path: &Path,
+    contents: &[u8],
+    executable: bool,
+    dry_run: bool,
+) -> Result<(), AppError> {
     if dry_run {
         return Ok(());
     }

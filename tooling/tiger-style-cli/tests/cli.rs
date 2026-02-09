@@ -6,23 +6,23 @@ use predicates::str::contains;
 use tempfile::TempDir;
 
 fn cli() -> Command {
-    Command::cargo_bin("tiger-style").expect("binary should compile")
+    Command::new(assert_cmd::cargo::cargo_bin!("tiger-style"))
 }
 
 fn write_file(path: &Path, content: &str) {
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).expect("create parent");
+        fs::create_dir_all(parent).unwrap_or_else(|err| panic!("create parent: {err}"));
     }
-    fs::write(path, content).expect("write file");
+    fs::write(path, content).unwrap_or_else(|err| panic!("write file: {err}"));
 }
 
 fn read_file(path: &Path) -> String {
-    fs::read_to_string(path).expect("read file")
+    fs::read_to_string(path).unwrap_or_else(|err| panic!("read file: {err}"))
 }
 
 fn source_file(path: &str) -> String {
     let repo_root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
-    fs::read_to_string(repo_root.join(path)).expect("read source file")
+    fs::read_to_string(repo_root.join(path)).unwrap_or_else(|err| panic!("read source file: {err}"))
 }
 
 fn assert_manifest(path: &Path, rust: bool, python: bool, typescript: bool) {
@@ -47,7 +47,7 @@ fn assert_manifest(path: &Path, rust: bool, python: bool, typescript: bool) {
 
 #[test]
 fn install_writes_required_tree() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
 
     cli()
         .arg("install")
@@ -74,7 +74,7 @@ fn install_writes_required_tree() {
 
 #[test]
 fn install_conflict_returns_exit_3() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
 
     cli()
         .arg("install")
@@ -83,9 +83,7 @@ fn install_conflict_returns_exit_3() {
         .assert()
         .success();
 
-    let changed = temp
-        .path()
-        .join("contracts/core/AI_AGENT_CORE_CONTRACT.md");
+    let changed = temp.path().join("contracts/core/AI_AGENT_CORE_CONTRACT.md");
     write_file(&changed, "local drift\n");
 
     cli()
@@ -99,7 +97,7 @@ fn install_conflict_returns_exit_3() {
 
 #[test]
 fn install_force_overwrites_conflicts() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
 
     cli()
         .arg("install")
@@ -108,9 +106,7 @@ fn install_force_overwrites_conflicts() {
         .assert()
         .success();
 
-    let changed = temp
-        .path()
-        .join("contracts/core/AI_AGENT_CORE_CONTRACT.md");
+    let changed = temp.path().join("contracts/core/AI_AGENT_CORE_CONTRACT.md");
     write_file(&changed, "local drift\n");
 
     cli()
@@ -129,7 +125,7 @@ fn install_force_overwrites_conflicts() {
 
 #[test]
 fn install_dry_run_does_not_write_files() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
 
     cli()
         .arg("install")
@@ -139,12 +135,10 @@ fn install_dry_run_does_not_write_files() {
         .assert()
         .success();
 
-    assert!(
-        !temp
-            .path()
-            .join("contracts/core/AI_AGENT_CORE_CONTRACT.md")
-            .exists()
-    );
+    assert!(!temp
+        .path()
+        .join("contracts/core/AI_AGENT_CORE_CONTRACT.md")
+        .exists());
 }
 
 #[test]
@@ -152,16 +146,25 @@ fn configure_autodetect_sets_manifest_statuses() {
     let cases = vec![
         (vec![], (false, false, false)),
         (vec![("src/lib.rs", "fn x() {}")], (true, false, false)),
-        (vec![("scripts/tool.py", "print('x')")], (false, true, false)),
-        (vec![("web/app.ts", "export const x = 1;")], (false, false, true)),
         (
-            vec![("src/main.rs", "fn main() {}"), ("web/app.tsx", "export default 1;")],
+            vec![("scripts/tool.py", "print('x')")],
+            (false, true, false),
+        ),
+        (
+            vec![("web/app.ts", "export const x = 1;")],
+            (false, false, true),
+        ),
+        (
+            vec![
+                ("src/main.rs", "fn main() {}"),
+                ("web/app.tsx", "export default 1;"),
+            ],
             (true, false, true),
         ),
     ];
 
     for (files, expected) in cases {
-        let temp = TempDir::new().expect("temp dir");
+        let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
         for (path, content) in files {
             write_file(&temp.path().join(path), content);
         }
@@ -187,7 +190,7 @@ fn configure_autodetect_sets_manifest_statuses() {
 
 #[test]
 fn configure_conflicts_when_agents_exists_without_force() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
     write_file(&temp.path().join("AGENTS.md"), "custom agents content\n");
 
     cli()
@@ -201,7 +204,7 @@ fn configure_conflicts_when_agents_exists_without_force() {
 
 #[test]
 fn configure_force_overwrites_agents() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
     write_file(&temp.path().join("AGENTS.md"), "custom agents content\n");
 
     cli()
@@ -220,7 +223,7 @@ fn configure_force_overwrites_agents() {
 
 #[test]
 fn bootstrap_installs_configures_and_passes_doctor() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
 
     cli()
         .arg("bootstrap")
@@ -229,7 +232,10 @@ fn bootstrap_installs_configures_and_passes_doctor() {
         .assert()
         .success();
 
-    assert!(temp.path().join("contracts/core/AI_AGENT_CORE_CONTRACT.md").exists());
+    assert!(temp
+        .path()
+        .join("contracts/core/AI_AGENT_CORE_CONTRACT.md")
+        .exists());
     assert!(temp.path().join("AGENTS.md").exists());
     assert_manifest(
         &temp.path().join("contracts/ACTIVE_LANGUAGE_CONTRACTS.md"),
@@ -241,7 +247,7 @@ fn bootstrap_installs_configures_and_passes_doctor() {
 
 #[test]
 fn bootstrap_dry_run_does_not_write_files() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
 
     cli()
         .arg("bootstrap")
@@ -257,7 +263,7 @@ fn bootstrap_dry_run_does_not_write_files() {
 
 #[test]
 fn doctor_json_reports_missing_tools_for_active_languages() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
 
     cli()
         .arg("install")
@@ -286,7 +292,7 @@ fn doctor_json_reports_missing_tools_for_active_languages() {
 
 #[test]
 fn doctor_strict_fails_when_bash_is_missing() {
-    let temp = TempDir::new().expect("temp dir");
+    let temp = TempDir::new().unwrap_or_else(|err| panic!("temp dir: {err}"));
 
     cli()
         .arg("install")

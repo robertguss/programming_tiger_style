@@ -97,7 +97,9 @@ fn parse_status(raw: &str) -> Result<bool, String> {
     match raw.trim() {
         "active" => Ok(true),
         "inactive" => Ok(false),
-        other => Err(format!("invalid language status '{other}', expected active|inactive")),
+        other => Err(format!(
+            "invalid language status '{other}', expected active|inactive"
+        )),
     }
 }
 
