@@ -43,11 +43,24 @@ fn main() {
     let code = match run(cli) {
         Ok(()) => EXIT_SUCCESS,
         Err(err) => {
-            eprintln!("{err}");
+            print_error(&err);
             err.exit_code()
         }
     };
     std::process::exit(code);
+}
+
+fn print_error(err: &AppError) {
+    match err {
+        AppError::Conflict(conflicts) => {
+            eprintln!("{conflicts}");
+            for conflict in &conflicts.conflicts {
+                eprintln!("\\n-- {} --", conflict.path);
+                eprintln!("{}", conflict.preview);
+            }
+        }
+        _ => eprintln!("{err}"),
+    }
 }
 
 fn run(cli: Cli) -> Result<(), AppError> {
