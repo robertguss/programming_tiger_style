@@ -9,15 +9,31 @@ Contract System v2 for AI-assisted software development.
 
 Start here:
 
-- [Quickstart](./docs/quickstart.md)
-- [Tiger Style CLI](./docs/cli.md)
-- [Using with Coding Agents](./docs/using-with-coding-agents.md)
-- [Adopting in a New Project](./docs/adopting-in-a-new-project.md)
-- [Contract Reference Map](./docs/contract-reference-map.md)
+- [Quickstart](./docs/getting-started/quickstart.md)
+- [Tiger Style CLI](./docs/tooling/cli.md)
+- [Using with Coding Agents](./docs/guides/using-with-coding-agents.md)
+- [Adopting in a New Project](./docs/getting-started/adopting-in-a-new-project.md)
+- [Contract Reference Map](./docs/reference/contract-reference-map.md)
 
 Full docs hub:
 
 - [Documentation Index](./docs/README.md)
+- [Changelog](./CHANGELOG.md)
+
+Docs are organized under:
+
+- `docs/getting-started/`
+- `docs/guides/`
+- `docs/tooling/`
+- `docs/reference/`
+- `docs/decisions/`
+
+Render docs as a local site with mdBook:
+
+```bash
+just book-build
+just book-serve
+```
 
 ## Source Foundations
 
@@ -126,4 +142,12 @@ configuration:
 
 ```bash
 tiger-style bootstrap --target /absolute/path/to/your-repo
+```
+
+For local CLI development:
+
+```bash
+just build
+just run -- --help
+just install-cargo
 ```

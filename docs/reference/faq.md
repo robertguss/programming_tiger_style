@@ -2,7 +2,7 @@
 
 ## Do I need all files on day one?
 
-No. Start with phased adoption from [Adopting in a New Project](./adopting-in-a-new-project.md).
+No. Start with phased adoption from [Adopting in a New Project](../getting-started/adopting-in-a-new-project.md).
 Minimum useful baseline is core contracts, one language contract, templates, and validation scripts.
 Then add tiered review controls and CI gates.
 
@@ -12,7 +12,7 @@ For non-doc changes validated by `scripts/validate_tdd_cycle.sh`, commit subject
 prefixes and preserve Red -> Green -> Refactor ordering. Docs/contracts-only ranges can skip strict
 prefix sequence unless `--strict-doc-only` is set.
 
-See [CI and Validation](./ci-and-validation.md) for details and failure signatures.
+See [CI and Validation](../guides/ci-and-validation.md) for details and failure signatures.
 
 ## What if my repository uses non-GitHub CI?
 
@@ -26,7 +26,7 @@ The provider can change; the contract semantics should not.
 
 ## How do we roll this out in a large legacy codebase?
 
-Use [Legacy Adoption Mode](./legacy-adoption-mode.md) and ratchet in stages:
+Use [Legacy Adoption Mode](../getting-started/legacy-adoption-mode.md) and ratchet in stages:
 
 1. Stage A: enforce on new/touched files.
 2. Stage B: expand module by module with explicit milestones.
@@ -44,7 +44,7 @@ prefix sequence checks. Keep evidence expectations proportionate to risk tier an
 Yes. Codex is the primary collaboration model here, but the templates and validators are agent
 agnostic. Keep the same artifacts and lifecycle with any agent platform.
 
-See [Using with Coding Agents](./using-with-coding-agents.md).
+See [Using with Coding Agents](../guides/using-with-coding-agents.md).
 
 ## What if a change touches both low-risk docs and high-risk code?
 

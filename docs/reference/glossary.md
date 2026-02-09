@@ -5,7 +5,7 @@
 The smallest user-visible behavior unit implemented and validated independently. Each feature slice
 must follow strict Red -> Green -> Refactor before the next slice starts.
 
-See [Using with Coding Agents](./using-with-coding-agents.md).
+See [Using with Coding Agents](../guides/using-with-coding-agents.md).
 
 ## Red -> Green -> Refactor
 
@@ -15,7 +15,7 @@ A strict TDD cycle:
 - Green: implement the minimum change to pass that test.
 - Refactor: improve structure while preserving behavior and keeping full suite green.
 
-See [Quickstart](./quickstart.md) and [CI and Validation](./ci-and-validation.md).
+See [Quickstart](../getting-started/quickstart.md) and [CI and Validation](../guides/ci-and-validation.md).
 
 ## Evidence Packet
 
@@ -44,17 +44,17 @@ See `contracts/core/RISK_TIER_POLICY.md` and [Risk Tiers and Controls](./risk-ti
 A structured request artifact defining objective, non-goals, scope, constraints, risk tier,
 interfaces, acceptance criteria, and expected tests before coding begins.
 
-See `templates/TASK_PACKET_TEMPLATE.md` and [Using with Coding Agents](./using-with-coding-agents.md).
+See `templates/TASK_PACKET_TEMPLATE.md` and [Using with Coding Agents](../guides/using-with-coding-agents.md).
 
 ## Test Plan
 
 A pre-implementation artifact defining red tests, green validation, boundary/negative cases,
 security/performance checks, and commands.
 
-See `templates/TEST_PLAN_TEMPLATE.md` and [Using with Coding Agents](./using-with-coding-agents.md).
+See `templates/TEST_PLAN_TEMPLATE.md` and [Using with Coding Agents](../guides/using-with-coding-agents.md).
 
 ## Contract Gates
 
 Automated CI checks that enforce TDD sequence and evidence structure before merge.
 
-See `.github/workflows/contract-gates.yml` and [CI and Validation](./ci-and-validation.md).
+See `.github/workflows/contract-gates.yml` and [CI and Validation](../guides/ci-and-validation.md).

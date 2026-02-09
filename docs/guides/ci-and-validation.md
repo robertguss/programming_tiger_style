@@ -173,10 +173,10 @@ CI provider with equivalent merge-blocking semantics.
 When adopting in a legacy repository:
 
 1. Keep core gates blocking from day one.
-2. Use language-gate ratchet stages from [Legacy Adoption Mode](./legacy-adoption-mode.md).
+2. Use language-gate ratchet stages from [Legacy Adoption Mode](../getting-started/legacy-adoption-mode.md).
 3. Track temporary waivers with expiration criteria in PR evidence.
 
 ## Related References
 
-- [Contract Reference Map](./contract-reference-map.md)
-- [FAQ](./faq.md)
+- [Contract Reference Map](../reference/contract-reference-map.md)
+- [FAQ](../reference/faq.md)

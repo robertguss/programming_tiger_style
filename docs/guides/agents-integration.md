@@ -58,11 +58,11 @@ When an agent session starts in a repository:
 
 ## Starter Template
 
-Use [AGENTS.md Starter Template](./templates/AGENTS_TEMPLATE.md) as a base and adapt it to your
+Use [AGENTS.md Starter Template](../templates/AGENTS_TEMPLATE.md) as a base and adapt it to your
 repository.
 
 ## Related References
 
 - [Using with Coding Agents](./using-with-coding-agents.md)
-- [Adopting in a New Project](./adopting-in-a-new-project.md)
-- [Contract Reference Map](./contract-reference-map.md)
+- [Adopting in a New Project](../getting-started/adopting-in-a-new-project.md)
+- [Contract Reference Map](../reference/contract-reference-map.md)

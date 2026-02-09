@@ -21,6 +21,9 @@ This command runs:
 2. `configure` (writes `contracts/ACTIVE_LANGUAGE_CONTRACTS.md`, creates `AGENTS.md`),
 3. `doctor` (validates structure/tooling; non-strict by default).
 
+The install phase copies `contracts/`, `templates/`, `checklists/`, `scripts/`, and baseline GitHub
+workflow/PR template assets.
+
 For dry-run preview:
 
 ```bash
@@ -181,9 +184,9 @@ This preserves process continuity while reducing immediate friction.
 
 ## Next Steps
 
-- Use [Tiger Style CLI](./cli.md) for command details and conflict/validation behavior.
-- Use [AGENTS.md Integration](./agents-integration.md) to align agent-specific instructions.
-- Use [Risk Tiers and Controls](./risk-tiers-and-controls.md) to operationalize reviewer and test
+- Use [Tiger Style CLI](../tooling/cli.md) for command details and conflict/validation behavior.
+- Use [AGENTS.md Integration](../guides/agents-integration.md) to align agent-specific instructions.
+- Use [Risk Tiers and Controls](../reference/risk-tiers-and-controls.md) to operationalize reviewer and test
   depth by change risk.
 - Use [Legacy Adoption Mode](./legacy-adoption-mode.md) when staged rollout is required for existing
   repositories.
