@@ -72,7 +72,7 @@ is_non_executable_path() {
     .github/pull_request_template.md|.gitignore|.prettierrc.json)
       return 0
       ;;
-    README.md|CONTRACT_SYSTEM_V2.md|PLANS.md)
+    README.md|CHANGELOG.md|PLANS.md)
       return 0
       ;;
     *)
