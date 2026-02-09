@@ -83,55 +83,17 @@ pub fn run(args: &DoctorArgs) -> Result<DoctorReport, AppError> {
         LanguageStatus::default()
     };
 
-    check_tool(
-        "cargo",
-        active_languages.rust,
-        &mut checks,
-        &mut missing_tools,
-        "Rust is active",
-    );
-    check_tool(
-        "ruff",
-        active_languages.python,
-        &mut checks,
-        &mut missing_tools,
-        "Python is active",
-    );
-    check_tool(
-        "mypy",
-        active_languages.python,
-        &mut checks,
-        &mut missing_tools,
-        "Python is active",
-    );
-    check_tool(
-        "pytest",
-        active_languages.python,
-        &mut checks,
-        &mut missing_tools,
-        "Python is active",
-    );
-    check_tool(
-        "node",
-        active_languages.typescript,
-        &mut checks,
-        &mut missing_tools,
-        "TypeScript is active",
-    );
-    check_tool(
-        "npm",
-        active_languages.typescript,
-        &mut checks,
-        &mut missing_tools,
-        "TypeScript is active",
-    );
-    check_tool(
-        "npx",
-        active_languages.typescript,
-        &mut checks,
-        &mut missing_tools,
-        "TypeScript is active",
-    );
+    for (tool, required, reason) in [
+        ("cargo", active_languages.rust, "Rust is active"),
+        ("ruff", active_languages.python, "Python is active"),
+        ("mypy", active_languages.python, "Python is active"),
+        ("pytest", active_languages.python, "Python is active"),
+        ("node", active_languages.typescript, "TypeScript is active"),
+        ("npm", active_languages.typescript, "TypeScript is active"),
+        ("npx", active_languages.typescript, "TypeScript is active"),
+    ] {
+        check_tool(tool, required, &mut checks, &mut missing_tools, reason);
+    }
 
     run_validator_check(
         &args.target,

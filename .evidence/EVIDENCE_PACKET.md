@@ -61,9 +61,11 @@
   - Slice 1 (`install`): extracted shared action logging helper to remove duplicated output logic.
   - Slice 2 (`configure`): extracted shared status-label helper to remove duplicated mode rendering
     logic.
+  - Slice 3 (`doctor`): replaced repeated per-tool checks with table-driven iteration.
 - Why behavior is unchanged:
   - Refactor touched only log-path structure and kept identical create/overwrite semantics.
   - Refactor touched only formatting logic in dry-run output and did not alter manifest decisions.
+  - Refactor touched only control-flow structure for equivalent tool-check behavior.
 - Command(s) used to confirm tests remain green:
   - `cargo test --manifest-path tooling/tiger-style-cli/Cargo.toml`
 
