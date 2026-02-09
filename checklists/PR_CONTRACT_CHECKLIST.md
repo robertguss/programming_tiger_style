@@ -7,9 +7,16 @@
 - [ ] Refactor happened only after Green and tests remained green.
 - [ ] PR contains explicit Red -> Green -> Refactor evidence.
 
+## Evidence Completeness
+
+- [ ] Red evidence includes failing test name, command, failure summary, and expected failure rationale.
+- [ ] Green evidence includes command and passing summary.
+- [ ] Refactor evidence includes unchanged-behavior rationale and green confirmation command.
+
 ## Risk And Scope
 
-- [ ] Risk tier declared with rationale.
+- [ ] Risk tier declared with rationale tied to blast radius/reversibility.
+- [ ] Task packet/test plan are present for Tier 1-3, or Tier 0 optionality is explicitly justified.
 - [ ] Scope is bounded and matches objective.
 - [ ] Rollback plan is documented.
 
@@ -33,6 +40,10 @@
 ## Dependencies
 
 - [ ] New dependencies (if any) include written justification and risk assessment.
+
+## Exceptions
+
+- [ ] If any contract rule is waived, exception details, approval reference, and expiration condition are documented.
 
 ## Review And CI
 

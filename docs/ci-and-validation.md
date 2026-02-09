@@ -75,7 +75,15 @@ PR content must include these headings:
 - `## Rollback Plan`
 - `## Validation Commands`
 
-The provided `.github/pull_request_template.md` already matches this structure.
+Semantic minimums enforced by validator:
+
+- `## Risk Tier`: non-empty `Tier` (`0-3`) and `Rationale`.
+- `## Red`: failing test, command, failure summary, expected failure rationale.
+- `## Green`: command and passing summary.
+- `## Refactor`: unchanged-behavior rationale and confirmation command.
+
+The provided `.github/pull_request_template.md` includes required headings, semantic fields, and
+exception signaling/checklist attestations.
 
 ## Common Failure Signatures and Fixes
 
@@ -98,13 +106,27 @@ Fix:
 Example:
 
 ```text
-Invalid sequence: GREEN before RED in commit <sha>
+Invalid sequence: GREEN requires an open RED stage.
 ```
 
 Fix:
 
 - Split work into proper sequence.
 - Ensure failing test commit exists before implementation commit.
+
+### Failure: missing semantic evidence field
+
+Example:
+
+```text
+Green section must include Passing summary.
+Evidence packet validation failed.
+```
+
+Fix:
+
+- Fill the required semantic field with concrete, reviewable content.
+- Re-run `scripts/validate_evidence_packet.sh` against PR body markdown.
 
 ### Failure: missing evidence headings
 
